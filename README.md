@@ -6,8 +6,7 @@ This engine includes support for collisions, meshes, materials, game objects and
 The elements used are very similar to the ones used in the engine [Unity](https://unity3d.com/ "Unity Official Website").
 
 
-![intro](./game/assets/img/intro.png)
-![game](./game/assets/img/image_for_read_me.png)
+![game](https://media.giphy.com/media/3b4FzCPzw4MI3KIFcN/giphy.gif)
 
 
 ## Getting Started
