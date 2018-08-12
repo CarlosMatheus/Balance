@@ -1,14 +1,11 @@
 # Balance
 
-Balance is a simple and challenging arcade game made using [Pygame](https://www.pygame.org/).  
-One of the purposes of this game is to develop a simple engine for making easier the use of Pygame to build more complex games.  
-This engine includes support for collisions, meshes, materials, game objects and scenes.  
-The elements used are very similar to the ones used in the engine [Unity](https://unity3d.com/ "Unity Official Website").
+![game](https://media.giphy.com/media/xB2Y7NHFE8C2Ip9EHD/giphy.gif)
+![game](https://media.giphy.com/media/1wQe46Tf4SzcMMIk1d/giphy.gif)
+![game](https://media.giphy.com/media/cdyniVu3x1ydtoq99k/giphy.gif)
+![game](https://media.giphy.com/media/5q2abHG5yN2UKyFOzz/giphy.gif)
 
-
-![intro](./game/assets/img/intro.png)
-![game](./game/assets/img/image_for_read_me.png)
-
+Balance is a simple and challenging arcade game made using [Pygin](https://github.com/CarlosMatheus/Pygin).  
 
 ## Getting Started
 
@@ -46,11 +43,12 @@ If any substantial change is made, please, help out with the documentation using
 
 ## About
 
-This project aims to create a game engine to make easier the precess of game development using Pygame. Therefore, the main frame of the game is flexible and can be adapted to multiple types of games.
-To understand a little bit more about how the code is structured visit the [wiki](https://github.com/CarlosMatheus/Balance/wiki).
-
 The objective of Balance is to get the most amount of points as possible. A hard task to the game is getting to score equal to 1000 and it should be the main goal of the game.
 This game is an example of the capabilities of the game structure.
+
+This project aims to create a game engine to make easier the precess of game development using Pygame. 
+One of the initial purposes of this game was to develop a simple engine for making easier the use of Pygame to build more complex games. Therefore, the main frame of the game was built flexible and could be adapted to multiple types of games.
+Balance and Pygin were born together in this repository, but then the engine grew and migrated to its own [repository](https://github.com/CarlosMatheus/Pygin).
 
 ## Authors
 
