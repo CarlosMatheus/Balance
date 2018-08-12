@@ -1,5 +1,4 @@
-from game_engine.components.animation import Animation
-from game_engine.key_frame import KeyFrame
+from pygin import *
 
 
 class PowerUpFadeOut(Animation):

@@ -1,19 +1,11 @@
-from game_engine.basic_objects.basic_circle import BasicCircle
-from game_engine.basic_objects.basic_rectangle import BasicRectangle
+from pygin import *
+from pygame.math import Vector2
 from game.game_objects.mesh_objects.star import Star
 from game.animations.circle_player_initial_animation import CirclePlayerInitialAnimation
-from game_engine.components.particle_system import ParticleSystem
 from game.game_objects.mesh_objects.particle import Particle
-from game_engine.components.animator import Animator
-from game_engine.game_object import GameObject
-from game_engine.components.circle_collider import CircleCollider
 from game.game_objects.mesh_objects.get_power_up_effect import GetPowerUpEffect
 from game.game_objects.mesh_objects.die_effect import DieEffect
-from game_engine.components.physics import Physics
-from game.animations.player_bounce import PlayerBounce
-from game_engine.color import Color
 from pygame import mixer
-from pygame.math import Vector2
 
 
 class PlayerCircle(BasicCircle):

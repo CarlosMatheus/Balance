@@ -1,4 +1,4 @@
-from game_engine.engine import Engine
+from pygin import *
 from game.scripts.game_settings import GameSettings
 
 

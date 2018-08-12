@@ -1,7 +1,4 @@
-from game_engine.components.polygon_collider import PolygonCollider
-from game_engine.basic_objects.basic_rectangle import BasicRectangle
-from game_engine.game_object import GameObject
-from game_engine.time import Time
+from pygin import *
 from pygame.math import Vector2
 from game.scripts.constants import Constants
 

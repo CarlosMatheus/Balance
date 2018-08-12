@@ -1,8 +1,5 @@
-from game_engine.basic_objects.basic_particle_circ import BasicParticleCirc
+from pygin import *
 from game.animations.particle_fade_animation import ParticleFadeAnimation
-from game_engine.material import Material
-from game_engine.components.animator import Animator
-from game_engine.time import Time
 
 
 class Particle(BasicParticleCirc):

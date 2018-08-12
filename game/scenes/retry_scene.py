@@ -1,4 +1,4 @@
-from game_engine.scene import Scene
+from pygin import *
 from game.game_objects.controllers.retry_controller import RetryController
 
 

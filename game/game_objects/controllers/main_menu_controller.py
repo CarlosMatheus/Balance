@@ -1,12 +1,5 @@
+from pygin import *
 from random import randint as rand
-from game.game_objects.mesh_objects.main_menu_rectangle import Rectangle
-from game_engine.scene import Scene
-from game_engine.game_object import GameObject
-from game_engine.input import Input
-from game_engine.color import Color
-from game_engine.time import Time
-from game_engine.basic_objects.text import Text
-from game_engine.material import Material
 from game.game_objects.controllers.background_particles_controller import BackgroundParticlesController
 from pygame.math import Vector2
 from game.scripts.constants import Constants

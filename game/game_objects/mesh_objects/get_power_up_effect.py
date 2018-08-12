@@ -1,8 +1,6 @@
-from game.game_objects.mesh_objects.particle import Particle
-from game_engine.components.particle_system import ParticleSystem
-from game_engine.game_object import GameObject
-from game_engine.time import Time
+from pygin import *
 from pygame.math import Vector2
+from game.game_objects.mesh_objects.particle import Particle
 
 
 class GetPowerUpEffect(GameObject):

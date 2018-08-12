@@ -1,5 +1,4 @@
-from game_engine.basic_objects.basic_rectangle import BasicRectangle
-from game_engine.components.polygon_collider import PolygonCollider
+from pygin import *
 
 
 class Rectangle(BasicRectangle):

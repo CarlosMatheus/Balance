@@ -1,6 +1,4 @@
-from game_engine.basic_objects.basic_rectangle import BasicRectangle
-from game_engine.components.polygon_collider import PolygonCollider
-from game_engine.components.particle_system import ParticleSystem
+from pygin import *
 from game.game_objects.mesh_objects.particle import Particle
 
 

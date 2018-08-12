@@ -1,4 +1,4 @@
-from game_engine.time import Time
+from pygin import *
 from random import randint as rand
 from pygame.math import Vector2
 
@@ -13,12 +13,7 @@ from game.game_objects.controllers.obstacles_controllers.spinning_middle_rect_ob
 from game.game_objects.controllers.obstacles_controllers.half_moon_spinning_rect_obstacle_controller import HalfMoonSpinningRectObstacleController
 from game.game_objects.controllers.obstacles_controllers.invisible_middle_obstacle_controller import InvisibleMiddleObstacleController
 from game.game_objects.controllers.obstacles_controllers.invisible_simple_obstacle_controller import InvisibleSimpleObstacleController
-from game_engine.game_object import GameObject
-from game_engine.basic_objects.text import Text
-from game_engine.color import Color
 from game.animations.text_up_fade_out_animation import TextUpFadeOutAnimation
-from game_engine.components.animator import Animator
-from game_engine.material import Material
 from game.scripts.constants import Constants
 
 

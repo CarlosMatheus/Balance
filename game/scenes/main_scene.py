@@ -1,4 +1,4 @@
-from game_engine.scene import Scene
+from pygin import *
 from game.game_objects.controllers.main_scene_controller import MainSceneController
 
 

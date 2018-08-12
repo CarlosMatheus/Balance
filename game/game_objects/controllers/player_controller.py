@@ -1,11 +1,7 @@
-from game_engine.input import Input
-from game_engine.time import Time
-from game.game_objects.mesh_objects.player_circle import PlayerCircle
+from pygin import *
 from pygame.math import Vector2
-from game_engine.material import Material
-from game_engine.game_object import GameObject
+from game.game_objects.mesh_objects.player_circle import PlayerCircle
 from game.scripts.constants import Constants
-from game_engine.color import Color
 import math
 
 

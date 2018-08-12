@@ -1,5 +1,4 @@
-from game_engine.basic_objects.basic_circle import BasicCircle
-from game_engine.components.circle_collider import CircleCollider
+from pygin import *
 
 
 class StarCircle(BasicCircle):
