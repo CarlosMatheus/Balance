@@ -1,11 +1,18 @@
-from pygin import *
+"""
+You must put all includes from others libraries before the include of pygin
+and put all include of other files after the include of pygin
+"""
+# Other Libraries includes:
 from pygame.math import Vector2
+from pygame import mixer
+# pygin includes:
+from pygin import *
+# files includes:
 from game.game_objects.mesh_objects.star import Star
 from game.animations.circle_player_initial_animation import CirclePlayerInitialAnimation
 from game.game_objects.mesh_objects.particle import Particle
 from game.game_objects.mesh_objects.get_power_up_effect import GetPowerUpEffect
 from game.game_objects.mesh_objects.die_effect import DieEffect
-from pygame import mixer
 
 
 class PlayerCircle(BasicCircle):

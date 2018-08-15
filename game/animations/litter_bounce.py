@@ -1,6 +1,13 @@
-from pygin import *
-from pygame.math import Vector2
+"""
+You must put all includes from others libraries before the include of pygin
+and put all include of other files after the include of pygin
+"""
+# Other Libraries includes:
 import random
+from pygame.math import Vector2
+# pygin includes:
+from pygin import *
+# files includes:
 
 
 class LitterBounce(Animation):

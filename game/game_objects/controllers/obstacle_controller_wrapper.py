@@ -1,8 +1,13 @@
-from pygin import *
-from random import randint as rand
+"""
+You must put all includes from others libraries before the include of pygin
+and put all include of other files after the include of pygin
+"""
+# Other Libraries includes:
 from pygame.math import Vector2
-
-#Controllers
+from random import randint as rand
+# pygin includes:
+from pygin import *
+# files includes:
 from game.game_objects.controllers.obstacles_controllers.simple_obstacle_controller import SimpleObstacleController
 from game.game_objects.controllers.obstacles_controllers.middle_rect_obstacle_controller import MiddleRectObstacleController
 from game.game_objects.controllers.obstacles_controllers.random_x_final_obstacle_controller import RandomXFinalObstacleController

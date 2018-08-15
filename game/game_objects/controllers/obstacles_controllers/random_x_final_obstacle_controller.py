@@ -1,9 +1,16 @@
-from pygin import *
+"""
+You must put all includes from others libraries before the include of pygin
+and put all include of other files after the include of pygin
+"""
+# Other Libraries includes:
 from pygame.math import Vector2
-from game.game_objects.mesh_objects.obstacle_rectangle import Rectangle
-from game.scripts.constants import Constants
 from random import uniform as randfloat
 from random import randint
+# pygin includes:
+from pygin import *
+# files includes:
+from game.game_objects.mesh_objects.obstacle_rectangle import Rectangle
+from game.scripts.constants import Constants
 from game.animations.obstacle_pulsing_animation import ObstaclePulsingAnimation
 
 

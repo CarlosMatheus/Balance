@@ -1,8 +1,13 @@
-from pygin import *
+"""
+You must put all includes from others libraries before the include of pygin
+and put all include of other files after the include of pygin
+"""
+# Other Libraries includes:
 from random import randint as rand
 from pygame.math import Vector2
-
-#Controllers
+# pygin includes:
+from pygin import *
+# files includes:
 from game.game_objects.controllers.items_controller.star_score_controller import StarScoreController
 from game.game_objects.controllers.items_controller.invencible_power_up_controller import InvenciblePowerUpController
 

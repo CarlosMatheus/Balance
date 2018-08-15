@@ -1,4 +1,13 @@
+"""
+You must put all includes from others libraries before the include of pygin
+and put all include of other files after the include of pygin
+"""
+# Other Libraries includes:
+from pygame.math import Vector2
+import math
+# pygin includes:
 from pygin import *
+# files includes:
 from game.game_objects.controllers.main_scene_controller import MainSceneController
 
 

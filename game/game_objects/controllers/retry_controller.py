@@ -1,6 +1,13 @@
-from pygin import *
+"""
+You must put all includes from others libraries before the include of pygin
+and put all include of other files after the include of pygin
+"""
+# Other Libraries includes:
 from pygame.math import Vector2
 from random import randint as rand
+# pygin includes:
+from pygin import *
+# files includes:
 from game.scripts.constants import Constants
 from game.game_objects.mesh_objects.screen_fader import ScreenFader
 from game.game_objects.controllers.background_particles_controller import BackgroundParticlesController

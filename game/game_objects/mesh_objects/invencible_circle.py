@@ -1,5 +1,12 @@
-from pygin import *
+"""
+You must put all includes from others libraries before the include of pygin
+and put all include of other files after the include of pygin
+"""
+# Other Libraries includes:
 from pygame.math import Vector2
+# pygin includes:
+from pygin import *
+# files includes:
 from game.game_objects.mesh_objects.particle import Particle
 from game.animations.power_up_fade_out import PowerUpFadeOut
 from game.animations.litter_bounce import LitterBounce
