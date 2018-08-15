@@ -8,7 +8,7 @@ os.environ['TCL_LIBRARY'] = os.path.join(PYTHON_INSTALL_DIR, 'tcl', 'tcl8.6')
 os.environ['TK_LIBRARY'] = os.path.join(PYTHON_INSTALL_DIR, 'tcl', 'tk8.6')
 
 balance = os.path.abspath(os.path.dirname(__file__))
-file = os.path.join(balance, "balance.py")
+file = os.path.join(balance, "balance.py") # Here is where you select the file that you will build
 
 __version__ = "1.1.0" # Todo: Put here the real version
 
@@ -52,7 +52,7 @@ class Files():
 dir = os.path.join(os.path.join(balance, "game"))
 
 include_files = [dir] # you can just include all files you need passing the entire folder as da dependency
-excludes = []
+excludes = ["numpy", "distutils", "test"] # you can try to exclude some library to make the file smaller, for exemple numpy
 packages = ["pygame", "pygin", "asyncio"] # Here we just have to put libraries used on engine
 
 setup(
