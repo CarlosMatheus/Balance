@@ -15,7 +15,8 @@ class Rectangle(BasicRectangle):
                                               spawn_prob="parab", vel_prob="parab",
                                               inherit_vel=True, inherit_vel_mult=1)
         self.particle_system.set_line_gen(self.fin_point_met, self.ini_point_met)
-        self.particle_system.play()
+        # Changed for IA:
+        # self.particle_system.play()
 
     def ini_point_met(self):
         return self.polygon_mesh.get_points()[0]

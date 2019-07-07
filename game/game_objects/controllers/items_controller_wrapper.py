@@ -21,14 +21,16 @@ class ItemsControllerWrapper(GameObject):
             power_up_generator.start()
 
     def update(self):
+        # Changed for IA:
+        pass
 
-        if Time.time_scale == 0.0:
-            #Adjust timer when paused
-            self.last_power_up_time += 1000 * Time.delta_time(True)
-
-        if 1000 * Time.now() - self.last_power_up_time > self.power_up_generation_delta * \
-                self.generation_obstacle_difficult:
-            self.generate_random_power_up()
+        # if Time.time_scale == 0.0:
+        #     #Adjust timer when paused
+        #     self.last_power_up_time += 1000 * Time.delta_time(True)
+        #
+        # if 1000 * Time.now() - self.last_power_up_time > self.power_up_generation_delta * \
+        #         self.generation_obstacle_difficult:
+        #     self.generate_random_power_up()
 
     def generate_random_power_up(self):
         self.last_power_up_time = 1000 * Time.now()

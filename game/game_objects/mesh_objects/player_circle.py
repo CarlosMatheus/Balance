@@ -30,7 +30,8 @@ class PlayerCircle(BasicCircle):
         self.particle_system.set_circ_gen(self.transform.position, self.circle_mesh.get_radius(), mode="directional",
                                           direct_met=self.direct_met, ini_angle_met=self.ini_angle_met,
                                           fin_angle_met=self.fin_angle_met)
-        self.particle_system.play()
+        # Changed for IA:
+        # self.particle_system.play()
 
 
     def ini_angle_met(self):
@@ -61,6 +62,13 @@ class PlayerCircle(BasicCircle):
                 self.invencible_power_up_controller.get_power_up()
 
     def die(self):
+        # Changed for IA:
+        score_controller = GameObject.find_by_type("ScoreController")[0]
+        die_penalty = 500
+
+        # Changed for IA:
+        score_controller.score -= die_penalty * Time.delta_time()
+
         if self.is_not_dying:
             self.death_sound.play()
             self.is_not_dying = False

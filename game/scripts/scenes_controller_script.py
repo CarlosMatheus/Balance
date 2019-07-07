@@ -10,4 +10,7 @@ class ScenesControllerScript:
         """
         :return: the scene list with the references to the scenes classes
         """
-        return [MainMenu, MainScene, RetryScene]
+        # Changed for IA:
+        # return [MainMenu, MainScene, RetryScene]
+        # Focus only on main scene
+        return [MainScene]

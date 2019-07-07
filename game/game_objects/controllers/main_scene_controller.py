@@ -53,7 +53,8 @@ class MainSceneController(GameObject):
         """
         if Time.now() - self.initial_time > 0.45 and self.should_initialize:
             self.should_initialize = False
-            self.background_particle_controller = BackgroundParticlesController()
+            # Changed for IA:
+            # self.background_particle_controller = BackgroundParticlesController()
             self.player_controller = PlayerController()
             self.obstacle_controller_wrapper = ObstacleControllerWrapper()
             self.items_controller = ItemsControllerWrapper()
@@ -71,7 +72,9 @@ class MainSceneController(GameObject):
             Time.time_scale = 0
         if self.should_change_scene and Time.now() - self.change_scene_timer > self.fade_out_duration+0.2:
             Time.time_scale = 1.0
-            Scene.change_scene(2)
+            # Changed for IA:
+            # Scene.change_scene(2)
+            Engine.end_game()
 
     def game_over(self):
         """
