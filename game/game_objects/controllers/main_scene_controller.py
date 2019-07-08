@@ -24,6 +24,7 @@ class MainSceneController(GameObject):
         # ---------------
         # Changed for IA:
         self.fade_out_duration = 0
+        Time.time_scale = 1.5
 
         self.trigger_died = False
         self.max_rectangles = 3
@@ -160,20 +161,22 @@ class MainSceneController(GameObject):
                 rectangle_states.append(rectangle_state)
 
         del_list = []
-        for idx in range(len(rectangle_states)): # del rect that are before 250
-            if rectangle_states[idx][1] < 250:
+        for idx in range(len(rectangle_states)): # del rect that are before 240
+            if rectangle_states[idx][1] < 240:
                 del_list.append(idx)
 
         for idx in del_list:
-            del rectangle_states[idx]
+            if idx < len(rectangle_states):
+                del rectangle_states[idx]
 
         del_list = []
-        for idx in range(len(rectangle_states)):  # del rect that are after 610
-            if rectangle_states[idx][1] > 610:
+        for idx in range(len(rectangle_states)):  # del rect that are after 630
+            if rectangle_states[idx][1] > 630:
                 del_list.append(idx)
 
         for idx in del_list:
-            del rectangle_states[idx]
+            if idx < len(rectangle_states):
+                del rectangle_states[idx]
 
         while len(rectangle_states) > max_rectangles:
             min_idx = 0
@@ -190,7 +193,7 @@ class MainSceneController(GameObject):
         for rectangle_state in rectangle_states:
             state += rectangle_state
 
-        print(state)
+        # print(state)
         # print(self.score_controller.score)
         return state, self.score_controller.score - self.current_score + 1, self.died
 
