@@ -7,6 +7,13 @@ import math
 
 class PlayerController(GameObject):
 
+    # def __init__(self):
+    #     # ---------------
+    #     # Changed for IA:
+    #     # super(GameObject, self).__init__()
+    #     # self.angle = 0.0
+    #     # ---------------
+
     def start(self):
         self.angle = 0.0
         self.angularSpeed = 5.0
