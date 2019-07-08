@@ -24,14 +24,14 @@ class MainSceneController(GameObject):
         # ---------------
         # Changed for IA:
         self.trigger_died = False
+        self.max_rectangles = 3
         self.agent = Trainer.get_agent()
-        self.state_size = 1 + 4 * len([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-        self.initial_state = [0.0] + [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] * 4
+        self.state_size = 1 + self.max_rectangles * len([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        self.initial_state = [0.0] + [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] * self.max_rectangles
         self.state = np.reshape(self.initial_state, [1, self.state_size])
         self.cumulative_reward = Trainer.get_cumulative_reward()
         self.died = False
         self.player_controller = None
-        # self.max_rectangles = 0
         # ---------------
 
     def setup_initializer(self):
@@ -122,7 +122,7 @@ class MainSceneController(GameObject):
         Will update and pass the information to AI
         :return:
         """
-        max_rectangles = 4
+        max_rectangles = self.max_rectangles
         # If Player already can control:
         rectangles = GameObject.find_by_type("Rectangle")
         state = [self.player_controller.angle]
@@ -153,6 +153,22 @@ class MainSceneController(GameObject):
                 rectangle_state = [center[0], center[1], height, width, angle, linear_vel.x, linear_vel.y]
                 rectangle_states.append(rectangle_state)
 
+        del_list = []
+        for idx in range(len(rectangle_states)): # del rect that are before 290
+            if rectangle_states[idx][1] < 290:
+                del_list.append(idx)
+
+        for idx in del_list:
+            del rectangle_states[idx]
+
+        del_list = []
+        for idx in range(len(rectangle_states)):  # del rect that are after 610
+            if rectangle_states[idx][1] > 610:
+                del_list.append(idx)
+
+        for idx in del_list:
+            del rectangle_states[idx]
+
         while len(rectangle_states) > max_rectangles:
             min_idx = 0
             min_val = 1000
@@ -168,7 +184,7 @@ class MainSceneController(GameObject):
         for rectangle_state in rectangle_states:
             state += rectangle_state
 
-        # print(state)
+        print(state)
         # print(self.score_controller.score)
         return state, self.score_controller.score - self.current_score + 1, self.died
 
