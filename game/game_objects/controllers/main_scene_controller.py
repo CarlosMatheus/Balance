@@ -6,6 +6,7 @@ from game.game_objects.controllers.background_particles_controller import Backgr
 from game.game_objects.controllers.obstacle_controller_wrapper import ObstacleControllerWrapper
 from game.game_objects.controllers.items_controller_wrapper import ItemsControllerWrapper
 from game.game_objects.controllers.pause_controller import PauseController
+import numpy as np
 
 
 class MainSceneController(GameObject):
@@ -17,6 +18,7 @@ class MainSceneController(GameObject):
         self.setup_initializer()
         self.setup_fader()
         self.fade_out_duration = 1.2
+        self.current_score = 0.0
 
         # ---------------
         # Changed for IA:
@@ -51,78 +53,81 @@ class MainSceneController(GameObject):
 
         self.initialize_scene()
         self.change_scene()
-
         # ---------------
         # Changed for IA:
-
-        max_rectangles = 4
-
-        # If Player already can control:
-        if self.player_controller and hasattr(self.player_controller, 'angle'):
-            rectangles = GameObject.find_by_type("Rectangle")
-            state = [self.player_controller.angle]
-            rectangle_states = []
-            empty_rectangle_state = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-
-            for rect in rectangles:
-                if rect.polygon_mesh is not None:
-                    # Get center:
-                    center = rect.transform.position
-                    # print(rect.transform.position)
-
-                    # Get height, width
-                    point_list = rect.polygon_collider.get_point_list()
-                    point_a = point_list[0]
-                    point_b = point_list[1]
-                    point_d = point_list[-1]
-
-                    width = point_a.distance_to(point_d)
-                    height = point_a.distance_to(point_b)
-
-                    # print([(point.x, point.y) for point in point_list])
-                    # print(rect.dimen)
-                    # print(rect.transform.rotation)
-
-                    # Get ang
-                    angle = point_a.angle_to(point_d)
-
-                    if rect.physics is None: rect.physics = Physics(rect)
-
-                    linear_vel = rect.physics.get_inst_velocity()
-                    # print("linear_vel = " + str(linear_vel))
-                    # angular_vel = rect.physics.get_inst_angular_velocity()
-
-                    # rectangle_state = [center[0], center[1], height, width, angle, linear_vel, angular_vel]
-                    rectangle_state = [center[0], center[1], height, width, angle, linear_vel.x, linear_vel.y]
-                    # print("rectangle state = " + str(rectangle_state))
-                    rectangle_states.append(rectangle_state)
-
-            while len(rectangle_states) > max_rectangles:
-                min_idx = 0
-                min_val = 1000
-                for i in range(len(rectangle_states)):
-                    if rectangle_states[i][1] < min_val:
-                        min_val = rectangle_states[i][1]
-                        min_idx = i
-                del rectangle_states[min_idx]
-
-            while len(rectangle_states) < max_rectangles:
-                rectangle_states.append(empty_rectangle_state)
-
-            for rectangle_state in rectangle_states:
-                state += rectangle_state
-
-            print(state)
-
-        # self.max_rectangles = max(len(rectangles), self.max_rectangles)
-        # print(self.max_rectangles)
+        self.ai()
         # ---------------
+
+    def ai(self):
+        """
+        manage the ia
+        :return:
+        """
+        state_size = 1+4*len([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+        if self.player_controller and hasattr(self.player_controller, 'angle'):
+            next_state, reward = self.update_ai()
+            self.current_score = self.score_controller.score
+
+            next_state = np.reshape(next_state, [1, state_size])
+
+
 
     def update_ai(self):
         """
         Will update and pass the information to AI
         :return:
         """
+        max_rectangles = 4
+        # If Player already can control:
+        rectangles = GameObject.find_by_type("Rectangle")
+        state = [self.player_controller.angle]
+        rectangle_states = []
+        empty_rectangle_state = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+        for rect in rectangles:
+            if rect.polygon_mesh is not None:
+                # Get center:
+                center = rect.transform.position
+
+                # Get height, width
+                point_list = rect.polygon_collider.get_point_list()
+                point_a = point_list[0]
+                point_b = point_list[1]
+                point_d = point_list[-1]
+
+                width = point_a.distance_to(point_d)
+                height = point_a.distance_to(point_b)
+
+                # Get ang
+                angle = point_a.angle_to(point_d)
+
+                if rect.physics is None: rect.physics = Physics(rect)
+
+                linear_vel = rect.physics.get_inst_velocity()
+
+                rectangle_state = [center[0], center[1], height, width, angle, linear_vel.x, linear_vel.y]
+                rectangle_states.append(rectangle_state)
+
+        while len(rectangle_states) > max_rectangles:
+            min_idx = 0
+            min_val = 1000
+            for i in range(len(rectangle_states)):
+                if rectangle_states[i][1] < min_val:
+                    min_val = rectangle_states[i][1]
+                    min_idx = i
+            del rectangle_states[min_idx]
+
+        while len(rectangle_states) < max_rectangles:
+            rectangle_states.append(empty_rectangle_state)
+
+        for rectangle_state in rectangle_states:
+            state += rectangle_state
+
+        print(state)
+        print(self.score_controller.score)
+        return state, self.score_controller.score - self.current_score + 1
+
 
     def initialize_scene(self):
         """
