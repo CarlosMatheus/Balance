@@ -69,6 +69,7 @@ class MainSceneController(GameObject):
         state_size = 1+4*len([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
         initial_state = [0.0] + [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]*4
         state = initial_state
+        cumulative_reward = Trainer.get_cumulative_reward()
 
         # If the game really started (passed the initial animation)
         if self.player_controller and hasattr(self.player_controller, 'angle'):
@@ -88,8 +89,26 @@ class MainSceneController(GameObject):
             # Appending this experience to the experience replay buffer
             agent.append_experience(state, action, reward, next_state, died)
 
+            # Update state for next frame
+            state = next_state
+
+            # Make cumulative reward
+            cumulative_reward = agent.gamma * cumulative_reward + reward
+            Trainer.set_cumulative_reward(cumulative_reward)
+
+            # Adjust score
             self.current_score = self.score_controller.score
 
+            if died:
+                episodes = Trainer.get_episodes()
+                NUM_EPISODES = Trainer.get_num_episodes()
+                time = Time.now() - self.initial_time
+                print("episode: {}/{}, time: {}, score: {:.6}, epsilon: {:.3}"
+                      .format(episodes, NUM_EPISODES, time, cumulative_reward, agent.epsilon))
+
+            batch_size = Trainer.get_batch_size()
+            if len(agent.replay_buffer) > 2 * batch_size:
+                loss = agent.replay(batch_size)
 
 
     def update_ai(self):

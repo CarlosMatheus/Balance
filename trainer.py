@@ -12,6 +12,8 @@ class Trainer:
     __died = False
     __batch_size = 32
     __cumulative_reward = 0.0
+    __episodes = 0
+    __num_episodes = 300
 
     @classmethod
     def set_one_rectangle_state_size(cls, size):
@@ -58,7 +60,18 @@ class Trainer:
         return cls.__cumulative_reward
 
     @classmethod
+    def get_episodes(cls):
+        return cls.__episodes
+
+    @classmethod
+    def get_num_episodes(cls):
+        return cls.__num_episodes
+
+    @classmethod
     def train_dqn(cls, play, num_episodes=300, render=True):
+
+        cls.__num_episodes = num_episodes
+
         fig_format = 'png'
 
         # Comment this line to enable training using your GPU
@@ -84,6 +97,8 @@ class Trainer:
         return_history = []
 
         for episodes in range(1, num_episodes + 1):
+
+            cls.__episodes = episodes
 
             play()
 
