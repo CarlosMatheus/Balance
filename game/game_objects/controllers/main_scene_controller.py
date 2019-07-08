@@ -23,6 +23,11 @@ class MainSceneController(GameObject):
 
         # ---------------
         # Changed for IA:
+        self.agent = Trainer.get_agent()
+        self.state_size = 1 + 4 * len([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        self.initial_state = [0.0] + [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] * 4
+        self.state = self.initial_state
+        self.cumulative_reward = Trainer.get_cumulative_reward()
         self.died = False
         self.player_controller = None
         # self.max_rectangles = 0
@@ -57,7 +62,7 @@ class MainSceneController(GameObject):
         self.change_scene()
         # ---------------
         # Changed for IA:
-        self.ai()
+        # self.ai()
         # ---------------
 
     def ai(self):
@@ -66,9 +71,8 @@ class MainSceneController(GameObject):
         :return:
         """
         agent = Trainer.get_agent()
-        state_size = 1+4*len([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-        initial_state = [0.0] + [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]*4
-        state = initial_state
+        state_size = self.state_size
+        state = self.state
         cumulative_reward = Trainer.get_cumulative_reward()
 
         # If the game really started (passed the initial animation)
@@ -195,7 +199,7 @@ class MainSceneController(GameObject):
             Time.time_scale = 1.0
             # Changed for IA:
             # Scene.change_scene(2)
-            # Engine.end_game()
+            Engine.end_game()
 
     def game_over(self):
         """
