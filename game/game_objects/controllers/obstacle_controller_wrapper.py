@@ -16,6 +16,8 @@ from game.game_objects.controllers.obstacles_controllers.invisible_simple_obstac
 from game.animations.text_up_fade_out_animation import TextUpFadeOutAnimation
 from game.scripts.constants import Constants
 
+import random
+
 
 
 class ObstacleControllerWrapper(GameObject):
@@ -29,7 +31,11 @@ class ObstacleControllerWrapper(GameObject):
         self.last_generation_time = 1000 * Time.now()
         self.game_object_list = []
         self.last_increases_dificculty_time = Time.now()
-        self.game_difficuty = 1
+        # ---------------
+        # Changed for IA:
+        self.game_difficuty = int(random.random()*10+1)
+        print(self.game_difficuty)
+        # ---------------
         self.time_to_increase_difficult = 6.2
         self.generation_obstacle_difficult = 1
         self.max_difficult = 10

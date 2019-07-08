@@ -24,7 +24,7 @@ class MainSceneController(GameObject):
         # ---------------
         # Changed for IA:
         self.fade_out_duration = 0
-        Time.time_scale = 1.5
+        Time.time_scale = 1.0
 
         self.trigger_died = False
         self.max_rectangles = 3
@@ -100,6 +100,7 @@ class MainSceneController(GameObject):
 
             # Appending this experience to the experience replay buffer
             agent.append_experience(state, action, reward, next_state, died)
+            # print(reward)
 
             # Update state for next frame
             self.state = next_state
@@ -107,6 +108,7 @@ class MainSceneController(GameObject):
             # Make cumulative reward
             cumulative_reward = agent.gamma * cumulative_reward + reward
             Trainer.set_cumulative_reward(cumulative_reward)
+            # print(cumulative_reward)
 
             # Adjust score
             self.current_score = self.score_controller.score
