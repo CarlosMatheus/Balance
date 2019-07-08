@@ -55,11 +55,14 @@ class MainSceneController(GameObject):
         # ---------------
         # Changed for IA:
 
+        max_rectangles = 4
+
         # If Player already can control:
         if self.player_controller and hasattr(self.player_controller, 'angle'):
             rectangles = GameObject.find_by_type("Rectangle")
             state = [self.player_controller.angle]
             rectangle_states = []
+            empty_rectangle_state = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
             for rect in rectangles:
                 if rect.polygon_mesh is not None:
@@ -86,11 +89,30 @@ class MainSceneController(GameObject):
                     if rect.physics is None: rect.physics = Physics(rect)
 
                     linear_vel = rect.physics.get_inst_velocity()
-                    angular_vel = rect.physics.get_inst_angular_velocity()
+                    # print("linear_vel = " + str(linear_vel))
+                    # angular_vel = rect.physics.get_inst_angular_velocity()
 
-                    rectangle_state = [center[0], center[1], height, width, angle, linear_vel, angular_vel]
-                    print("rectangle state = " + str(rectangle_state))
+                    # rectangle_state = [center[0], center[1], height, width, angle, linear_vel, angular_vel]
+                    rectangle_state = [center[0], center[1], height, width, angle, linear_vel.x, linear_vel.y]
+                    # print("rectangle state = " + str(rectangle_state))
                     rectangle_states.append(rectangle_state)
+
+            while len(rectangle_states) > max_rectangles:
+                min_idx = 0
+                min_val = 1000
+                for i in range(len(rectangle_states)):
+                    if rectangle_states[i][1] < min_val:
+                        min_val = rectangle_states[i][1]
+                        min_idx = i
+                del rectangle_states[min_idx]
+
+            while len(rectangle_states) < max_rectangles:
+                rectangle_states.append(empty_rectangle_state)
+
+            for rectangle_state in rectangle_states:
+                state += rectangle_state
+
+            print(state)
 
         # self.max_rectangles = max(len(rectangles), self.max_rectangles)
         # print(self.max_rectangles)
