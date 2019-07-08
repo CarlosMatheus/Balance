@@ -7,6 +7,7 @@ from game.game_objects.controllers.obstacle_controller_wrapper import ObstacleCo
 from game.game_objects.controllers.items_controller_wrapper import ItemsControllerWrapper
 from game.game_objects.controllers.pause_controller import PauseController
 import numpy as np
+from trainer import Trainer
 
 
 class MainSceneController(GameObject):
@@ -22,6 +23,7 @@ class MainSceneController(GameObject):
 
         # ---------------
         # Changed for IA:
+        self.died = False
         self.player_controller = None
         # self.max_rectangles = 0
         # ---------------
@@ -63,13 +65,29 @@ class MainSceneController(GameObject):
         manage the ia
         :return:
         """
+        agent = Trainer.get_agent()
         state_size = 1+4*len([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        initial_state = [0.0] + [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]*4
+        state = initial_state
 
+        # If the game really started (passed the initial animation)
         if self.player_controller and hasattr(self.player_controller, 'angle'):
-            next_state, reward = self.update_ai()
-            self.current_score = self.score_controller.score
 
+            # Get this frame action
+            action = agent.act(state)
+
+            # Get the state and reward of this frame
+            next_state, reward, died = self.update_ai()
+
+            # Reshape the state to pass on Keras:
             next_state = np.reshape(next_state, [1, state_size])
+
+            # Make AI play actual action
+
+            # Appending this experience to the experience replay buffer
+            agent.append_experience(state, action, reward, next_state, died)
+
+            self.current_score = self.score_controller.score
 
 
 
@@ -126,7 +144,7 @@ class MainSceneController(GameObject):
 
         print(state)
         print(self.score_controller.score)
-        return state, self.score_controller.score - self.current_score + 1
+        return state, self.score_controller.score - self.current_score + 1, self.died
 
 
     def initialize_scene(self):
@@ -164,4 +182,8 @@ class MainSceneController(GameObject):
         Is called just once to enable change scene
         """
         if not self.should_change_scene:
+            # ---------------
+            # Changed for IA:
+            self.died = True
+            # ---------------
             self.should_fade_out = True
