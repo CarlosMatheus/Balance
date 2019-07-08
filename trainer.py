@@ -4,8 +4,8 @@ from dqn_agent import DQNAgent
 
 
 class Trainer:
-    __one_rectangle_state_size = 6
-    __max_num_rec = 5
+    __one_rectangle_state_size = 7
+    __max_num_rec = 4
     __action_size = len(["turn_right", "turn_left", "nothing"])
     __state_size = 1 + __one_rectangle_state_size * __max_num_rec
     __agent = None
@@ -14,6 +14,7 @@ class Trainer:
     __cumulative_reward = 0.0
     __episodes = 0
     __num_episodes = 300
+    __return_history = []
 
     @classmethod
     def set_one_rectangle_state_size(cls, size):
@@ -64,15 +65,21 @@ class Trainer:
         return cls.__episodes
 
     @classmethod
+    def increase_episodes(cls):
+        cls.__episodes += 1
+
+    @classmethod
     def get_num_episodes(cls):
         return cls.__num_episodes
+
+    @classmethod
+    def get_return_history(cls):
+        return cls.__return_history
 
     @classmethod
     def train_dqn(cls, play, num_episodes=300, render=True):
 
         cls.__num_episodes = num_episodes
-
-        fig_format = 'png'
 
         # Comment this line to enable training using your GPU
         os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
@@ -91,32 +98,26 @@ class Trainer:
         else:
             print('No weights found from previous learning session.')
 
-        died = cls.set_died(False)
-        died = cls.get_died()
-        batch_size = cls.get_batch_size()  # batch size used fro the experience replay
-        return_history = []
+        cls.set_died(False)
 
-        for episodes in range(1, num_episodes + 1):
+        cls.__episodes = episodes = 1
 
-            cls.__episodes = episodes
+        play()
 
-            play()
-
-            cumulative_reward = cls.get_cumulative_reward()
-
-            return_history.append(cumulative_reward)
-
-            agent = cls.get_agent()
-            agent.update_epsilon()
-
-            # Update the plot for training monitoring
-            if episodes % 20 == 0:
-                plt.plot(return_history, 'b')
-                plt.xlabel('Episode')
-                plt.ylabel('Return')
-                plt.show(block=False)
-                plt.pause(0.1)
-                plt.savefig('dqn_training.' + fig_format, fig_format=fig_format)
-                # Saving the model to disk
-                agent.save('balance.h5')
         plt.pause(1.0)
+
+    @classmethod
+    def plot(cls):
+        # Update the plot for training monitoring
+        fig_format = 'png'
+        return_history = cls.get_return_history()
+        agent = cls.get_agent()
+
+        plt.plot(return_history, 'b')
+        plt.xlabel('Episode')
+        plt.ylabel('Return')
+        plt.show(block=False)
+        plt.pause(0.1)
+        plt.savefig('dqn_training.' + fig_format, fig_format=fig_format)
+        # Saving the model to disk
+        agent.save('balance.h5')

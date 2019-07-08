@@ -26,7 +26,7 @@ class MainSceneController(GameObject):
         self.agent = Trainer.get_agent()
         self.state_size = 1 + 4 * len([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
         self.initial_state = [0.0] + [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] * 4
-        self.state = self.initial_state
+        self.state = np.reshape(self.initial_state, [1, self.state_size])
         self.cumulative_reward = Trainer.get_cumulative_reward()
         self.died = False
         self.player_controller = None
@@ -62,7 +62,7 @@ class MainSceneController(GameObject):
         self.change_scene()
         # ---------------
         # Changed for IA:
-        # self.ai()
+        self.ai()
         # ---------------
 
     def ai(self):
@@ -94,7 +94,7 @@ class MainSceneController(GameObject):
             agent.append_experience(state, action, reward, next_state, died)
 
             # Update state for next frame
-            state = next_state
+            self.state = next_state
 
             # Make cumulative reward
             cumulative_reward = agent.gamma * cumulative_reward + reward
@@ -166,8 +166,8 @@ class MainSceneController(GameObject):
         for rectangle_state in rectangle_states:
             state += rectangle_state
 
-        print(state)
-        print(self.score_controller.score)
+        # print(state)
+        # print(self.score_controller.score)
         return state, self.score_controller.score - self.current_score + 1, self.died
 
 
@@ -197,9 +197,25 @@ class MainSceneController(GameObject):
             Time.time_scale = 0
         if self.should_change_scene and Time.now() - self.change_scene_timer > self.fade_out_duration+0.2:
             Time.time_scale = 1.0
+            # ---------------
             # Changed for IA:
-            # Scene.change_scene(2)
-            Engine.end_game()
+
+            cumulative_reward = Trainer.get_cumulative_reward()
+            return_history = Trainer.get_return_history()
+
+            return_history.append(cumulative_reward)
+
+            agent = Trainer.get_agent()
+            agent.update_epsilon()
+            episodes = Trainer.get_episodes()
+
+            if episodes % 20 == 0:
+                Trainer.plot()
+
+            Trainer.increase_episodes()
+            Scene.change_scene(0)
+            # Engine.end_game()
+            # ---------------
 
     def game_over(self):
         """

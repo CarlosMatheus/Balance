@@ -93,12 +93,18 @@ class DQNAgent:
         :rtype: int.
         """
 
-        actions = self.model.predict(state)[0]
+        try:
+            actions = self.model.predict(state)[0]
+        except Exception as e:
+            print('Failed to upload to ftp: ' + str(e))
 
         if np.random.binomial(1, self.epsilon) == 1:
             action = np.random.choice([a for a in range(len(actions))])
         else:
-            action = np.random.choice([action_ for action_, value_ in enumerate(actions) if value_ == np.max(actions)])
+            try:
+                action = np.random.choice([action_ for action_, value_ in enumerate(actions) if value_ == np.max(actions)])
+            except:
+                print(1)
 
         return action
 
