@@ -23,6 +23,7 @@ class MainSceneController(GameObject):
 
         # ---------------
         # Changed for IA:
+        self.trigger_died = False
         self.agent = Trainer.get_agent()
         self.state_size = 1 + 4 * len([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
         self.initial_state = [0.0] + [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] * 4
@@ -76,7 +77,7 @@ class MainSceneController(GameObject):
         cumulative_reward = Trainer.get_cumulative_reward()
 
         # If the game really started (passed the initial animation)
-        if self.player_controller and hasattr(self.player_controller, 'angle'):
+        if self.player_controller and hasattr(self.player_controller, 'angle') and not self.trigger_died:
 
             # Get this frame action
             action = agent.act(state)
@@ -104,6 +105,7 @@ class MainSceneController(GameObject):
             self.current_score = self.score_controller.score
 
             if died:
+                self.trigger_died = True
                 episodes = Trainer.get_episodes()
                 NUM_EPISODES = Trainer.get_num_episodes()
                 time = Time.now() - self.initial_time
@@ -206,10 +208,10 @@ class MainSceneController(GameObject):
             return_history.append(cumulative_reward)
 
             agent = Trainer.get_agent()
-            agent.update_epsilon()
             episodes = Trainer.get_episodes()
+            agent.update_epsilon()
 
-            if episodes % 20 == 0:
+            if episodes % 10 == 0:
                 Trainer.plot()
 
             Trainer.increase_episodes()

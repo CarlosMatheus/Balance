@@ -18,6 +18,12 @@ class Rectangle(BasicRectangle):
         # Changed for IA:
         # self.particle_system.play()
 
+    def update(self):
+        if self.transform.position.y > 465:
+            score_controller = GameObject.find_by_type("ScoreController")[0]
+            score_controller.score += (self.transform.position.y - 465) / 10
+            # print((self.transform.position.y - 465) / 10)
+
     def ini_point_met(self):
         return self.polygon_mesh.get_points()[0]
 
