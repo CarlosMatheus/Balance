@@ -18,6 +18,11 @@ class MainSceneController(GameObject):
         self.setup_fader()
         self.fade_out_duration = 1.2
 
+        # ---------------
+        # Changed for IA:
+        # self.max_rectangles = 0
+        # ---------------
+
     def setup_initializer(self):
         self.initial_time = Time.now()
         self.should_initialize = True
@@ -45,6 +50,36 @@ class MainSceneController(GameObject):
 
         self.initialize_scene()
         self.change_scene()
+
+        # ---------------
+        # Changed for IA:
+        rectangles = GameObject.find_by_type("Rectangle")
+        state = [self.player_controller.angle]
+        for rect in rectangles:
+            if rect.polygon_mesh is not None:
+                # Get center:
+                print(rect.transform.position)
+
+                # Get h, l
+                point_list = rect.polygon_collider.get_point_list()
+                print([(point.x, point.y) for point in point_list])
+                print(rect.dimen)
+                print(rect.transform.rotation)
+
+                # Get ang
+
+                if rect.physics is not None:
+                    print("" + str(rect.physics.get_inst_velocity()))
+
+        # self.max_rectangles = max(len(rectangles), self.max_rectangles)
+        # print(self.max_rectangles)
+        # ---------------
+
+    def update_ai(self):
+        """
+        Will update and pass the information to AI
+        :return:
+        """
 
     def initialize_scene(self):
         """
@@ -74,7 +109,7 @@ class MainSceneController(GameObject):
             Time.time_scale = 1.0
             # Changed for IA:
             # Scene.change_scene(2)
-            Engine.end_game()
+            # Engine.end_game()
 
     def game_over(self):
         """
