@@ -55,21 +55,40 @@ class MainSceneController(GameObject):
         # Changed for IA:
         rectangles = GameObject.find_by_type("Rectangle")
         state = [self.player_controller.angle]
+        rectangle_states = []
+
         for rect in rectangles:
             if rect.polygon_mesh is not None:
                 # Get center:
+                center = rect.transform.position
                 print(rect.transform.position)
 
-                # Get h, l
+                # Get height, width
                 point_list = rect.polygon_collider.get_point_list()
-                print([(point.x, point.y) for point in point_list])
-                print(rect.dimen)
-                print(rect.transform.rotation)
+                point_a = point_list[0]
+                point_b = point_list[1]
+                point_d = point_list[-1]
+
+                width = point_a.distance_to(point_d)
+                height = point_a.distance_to(point_b)
+
+                # print([(point.x, point.y) for point in point_list])
+                # print(rect.dimen)
+                # print(rect.transform.rotation)
 
                 # Get ang
+                angle = point_a.angle_to(point_d)
 
                 if rect.physics is not None:
-                    print("" + str(rect.physics.get_inst_velocity()))
+                    linear_vel = rect.physics.get_inst_velocity()
+                    print("Linear velocity" + str(linear_vel))
+                else:
+                    rect.physics = Physics(rect)
+                    linear_vel = rect.physics.get_inst_velocity()
+
+                rectangle_state = [center[0], center[1], height, width, angle, linear_vel]
+                print("rectangle state = " + str(rectangle_state))
+                rectangle_states.append(rectangle_state)
 
         # self.max_rectangles = max(len(rectangles), self.max_rectangles)
         # print(self.max_rectangles)
