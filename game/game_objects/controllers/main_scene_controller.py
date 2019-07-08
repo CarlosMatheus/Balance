@@ -83,6 +83,7 @@ class MainSceneController(GameObject):
             next_state = np.reshape(next_state, [1, state_size])
 
             # Make AI play actual action
+            self.player_controller.set_IA_as_player(action)
 
             # Appending this experience to the experience replay buffer
             agent.append_experience(state, action, reward, next_state, died)

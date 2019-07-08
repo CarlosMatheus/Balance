@@ -4,7 +4,6 @@ from game.game_objects.mesh_objects.player_circle import PlayerCircle
 from game.scripts.constants import Constants
 import math
 
-
 class PlayerController(GameObject):
 
     # def __init__(self):
@@ -15,6 +14,11 @@ class PlayerController(GameObject):
     #     # ---------------
 
     def start(self):
+        # ---------------
+        # Changed for IA:
+        self.AI_playing = False
+        self.AI_playing_act = 2
+        # ---------------
         self.angle = 0.0
         self.angularSpeed = 5.0
         self.game_object_list = [
@@ -25,13 +29,26 @@ class PlayerController(GameObject):
         self.should_play = True
         self.initial_time = Time.now()
 
+    def set_IA_as_player(self, act):
+        self.AI_playing = True
+        self.AI_playing_act = act
+
     def update(self):
+        # ---------------
+        # Changed for IA:
         self.initial_animation()
         if not self.in_initial_animation:
-            if Input.is_pressing_left:
-                self.turn_left()
-            if Input.is_pressing_right:
-                self.turn_right()
+            if not self.AI_playing:
+                if Input.is_pressing_left:
+                    self.turn_left()
+                if Input.is_pressing_right:
+                    self.turn_right()
+            else:
+                if self.AI_playing_act == 0:
+                    self.turn_right()
+                elif self.AI_playing_act == 1:
+                    self.turn_left()
+        # ---------------
 
     def initial_animation(self):
         if self.in_initial_animation:
