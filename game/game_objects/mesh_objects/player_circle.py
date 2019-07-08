@@ -62,19 +62,20 @@ class PlayerCircle(BasicCircle):
                 self.invencible_power_up_controller.get_power_up()
 
     def die(self):
+        # -----------------
         # Changed for IA:
         score_controller = GameObject.find_by_type("ScoreController")[0]
         die_penalty = 500
 
-        # Changed for IA:
         score_controller.score -= die_penalty * Time.delta_time()
 
-        if self.is_not_dying:
-            self.death_sound.play()
-            self.is_not_dying = False
-            self.particle_system.stop()
-            inst_vel = self.physics.inst_velocity
-            r = self.circle_mesh.get_radius()
-            for i in range(7):
-                DieEffect(self.transform.position, self.material, 1 + r*i/6, inst_vel=inst_vel)
-            self.material.alpha = 0
+        # if self.is_not_dying:
+        #     self.death_sound.play()
+        #     self.is_not_dying = False
+        #     self.particle_system.stop()
+        #     inst_vel = self.physics.inst_velocity
+        #     r = self.circle_mesh.get_radius()
+        #     for i in range(7):
+        #         DieEffect(self.transform.position, self.material, 1 + r*i/6, inst_vel=inst_vel)
+        #     self.material.alpha = 0
+        # -----------------
