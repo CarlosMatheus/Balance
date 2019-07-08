@@ -88,7 +88,7 @@ class Trainer:
         action_size = cls.get_action_size()
 
         # Creating the DQN agent
-        agent = DQNAgent(state_size, action_size, gamma=0.95, epsilon=0.5, epsilon_min=0.01, epsilon_decay=0.98, learning_rate=0.01, buffer_size=4098)
+        agent = DQNAgent(state_size, action_size, gamma=0.95, epsilon=0.5, epsilon_min=0.01, epsilon_decay=0.99, learning_rate=0.001, buffer_size=4098)
         cls.set_agent(agent)
 
         # checking if weights from previous learning session exists

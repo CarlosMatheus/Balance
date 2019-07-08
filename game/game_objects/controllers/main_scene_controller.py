@@ -19,11 +19,12 @@ class MainSceneController(GameObject):
         """
         self.setup_initializer()
         self.setup_fader()
-        self.fade_out_duration = 1.2
         self.current_score = 0.0
 
         # ---------------
         # Changed for IA:
+        self.fade_out_duration = 0
+
         self.trigger_died = False
         self.max_rectangles = 3
         self.agent = Trainer.get_agent()
@@ -159,8 +160,8 @@ class MainSceneController(GameObject):
                 rectangle_states.append(rectangle_state)
 
         del_list = []
-        for idx in range(len(rectangle_states)): # del rect that are before 290
-            if rectangle_states[idx][1] < 290:
+        for idx in range(len(rectangle_states)): # del rect that are before 250
+            if rectangle_states[idx][1] < 250:
                 del_list.append(idx)
 
         for idx in del_list:
