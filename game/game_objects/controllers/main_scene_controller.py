@@ -8,6 +8,7 @@ from game.game_objects.controllers.items_controller_wrapper import ItemsControll
 from game.game_objects.controllers.pause_controller import PauseController
 import numpy as np
 from trainer import Trainer
+import math
 
 
 class MainSceneController(GameObject):
@@ -61,6 +62,10 @@ class MainSceneController(GameObject):
 
         self.initialize_scene()
         self.change_scene()
+
+        # if self.player_controller and hasattr(self.player_controller, 'angle') and not self.trigger_died:
+        #     print(((self.player_controller.angle / math.pi) * 180) % 180)
+
         # ---------------
         # Changed for IA:
         self.ai()
@@ -125,7 +130,7 @@ class MainSceneController(GameObject):
         max_rectangles = self.max_rectangles
         # If Player already can control:
         rectangles = GameObject.find_by_type("Rectangle")
-        state = [self.player_controller.angle]
+        state = [(((self.player_controller.angle / math.pi) * 180) % 180)]
         rectangle_states = []
         empty_rectangle_state = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
