@@ -92,17 +92,26 @@ class PlayerCircle(BasicCircle):
         penalty = self.f(abs(min_dist))
         # print(penalty)
         if penalty < 0:
+            # print(penalty)
             score_controller = GameObject.find_by_type("ScoreController")[0]
             score_controller.score += penalty
             # print(penalty)
             # print("MIN_dist: " + str(min_dist))
 
     def f(self, x):
-        if x > 0:
-            return 2 * math.log(x / 150)
-        else:
-            return -25
-
+        if x > 40:
+            return 1
+        if 30 < x < 40:
+            return -1
+        if 20 < x < 30:
+            return -2
+        if 10 < x < 20:
+            return -4
+        if 5 < x < 10:
+            return -5
+        if x < 5:
+            return -10
+        return 1
 
     def update(self):
         self.check_collision()
