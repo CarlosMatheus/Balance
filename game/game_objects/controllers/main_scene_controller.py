@@ -134,10 +134,21 @@ class MainSceneController(GameObject):
         Will update and pass the information to AI
         :return:
         """
-        max_rectangles = self.max_rectangles
         # If Player already can control:
-        rectangles = GameObject.find_by_type("Rectangle")
         state = [(((self.player_controller.angle / math.pi) * 180) % 180)]
+
+        rectangle_states = self.get_rectangle_state()
+
+        for rectangle_state in rectangle_states:
+            state += rectangle_state
+
+        # print(state)
+        # print(self.score_controller.score)
+        return state, self.score_controller.score - self.current_score + 1, self.died
+
+    def get_rectangle_state(self):
+        rectangles = GameObject.find_by_type("Rectangle")
+        max_rectangles = self.max_rectangles
         rectangle_states = []
         empty_rectangle_state = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
@@ -166,7 +177,7 @@ class MainSceneController(GameObject):
                 rectangle_states.append(rectangle_state)
 
         del_list = []
-        for idx in range(len(rectangle_states)): # del rect that are before 200
+        for idx in range(len(rectangle_states)):  # del rect that are before 200
             if rectangle_states[idx][1] < 200:
                 del_list.append(idx)
 
@@ -195,12 +206,7 @@ class MainSceneController(GameObject):
         while len(rectangle_states) < max_rectangles:
             rectangle_states.append(empty_rectangle_state)
 
-        for rectangle_state in rectangle_states:
-            state += rectangle_state
-
-        # print(state)
-        # print(self.score_controller.score)
-        return state, self.score_controller.score - self.current_score + 1, self.died
+        return rectangle_states
 
 
     def initialize_scene(self):
