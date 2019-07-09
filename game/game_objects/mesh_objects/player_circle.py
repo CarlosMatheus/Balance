@@ -63,7 +63,12 @@ class PlayerCircle(BasicCircle):
                 self.get_min_dist_from_line(point_c, point_d),
                 self.get_min_dist_from_line(point_d, point_a),
             ]
-            min_dist_to_rect = min(dists)
+
+            min_dist_to_rect = 1000
+            for dist in dists:
+                if abs(dist) < abs(min_dist_to_rect):
+                    min_dist_to_rect = dist
+
             if abs(min_dist_to_rect) < abs(min_dist):
                 min_dist = min_dist_to_rect
             self.update_score_based_on_dists(min_dist_to_rect)
@@ -83,7 +88,9 @@ class PlayerCircle(BasicCircle):
         return min_dist
 
     def update_score_based_on_dists(self, min_dist):
+        # print(min_dist)
         penalty = self.f(abs(min_dist))
+        # print(penalty)
         if penalty < 0:
             score_controller = GameObject.find_by_type("ScoreController")[0]
             score_controller.score += penalty
@@ -92,7 +99,7 @@ class PlayerCircle(BasicCircle):
 
     def f(self, x):
         if x > 0:
-            return 4 * math.log(x / 70)
+            return 2 * math.log(x / 150)
         else:
             return -25
 

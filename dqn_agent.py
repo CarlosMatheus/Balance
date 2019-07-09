@@ -49,39 +49,31 @@ class DQNAgent:
         model = models.Sequential()
 
         # 1 layer
-        num_neurons = 32
-        model.add(layers.Dense(
-                units=num_neurons,
-                activation=activations.relu,
-                input_dim=self.state_size,
-            ),
-        )
-
-        # 2 layer
-        num_neurons = 64
-        model.add(layers.Dense(
-                units=num_neurons,
-                activation=activations.relu,
-            ),
-        )
-
-        # 3 layer
-        num_neurons = 32
+        num_neurons = 24
         model.add(layers.Dense(
             units=num_neurons,
             activation=activations.relu,
-            ),
+            input_dim=self.state_size,
+        ),
         )
 
-        # 4 layer
+        # 2 layer
+        num_neurons = 24
+        model.add(layers.Dense(
+            units=num_neurons,
+            activation=activations.relu,
+        ),
+        )
+
+        # 3 layer
         num_neurons = self.action_size
         model.add(layers.Dense(
-                units=num_neurons,
-                activation=activations.linear
-            ),
+            units=num_neurons,
+            activation=activations.linear
+        ),
         )
 
-        model.build(input_shape=(1, self.state_size))
+        model.build(input_shape=(1, 2))
         model.summary()
 
         model.compile(

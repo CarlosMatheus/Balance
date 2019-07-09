@@ -32,8 +32,11 @@ class MainSceneController(GameObject):
         self.trigger_died = False
         self.max_rectangles = 3
         self.agent = Trainer.get_agent()
-        self.state_size = 1 + self.max_rectangles * len([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-        self.initial_state = [0.0] + [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] * self.max_rectangles
+        # self.state_size = 1 + self.max_rectangles * len([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        self.state_size = 3
+        # self.initial_state = [0.0] + [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] * self.max_rectangles
+        self.initial_state = [0.0, 1000.0, 1000.0]
+        # self.state = np.reshape(self.initial_state, [1, self.state_size])
         self.state = np.reshape(self.initial_state, [1, self.state_size])
         self.cumulative_reward = Trainer.get_cumulative_reward()
         self.died = False
@@ -69,7 +72,12 @@ class MainSceneController(GameObject):
         self.change_scene()
 
         # if self.player_controller and hasattr(self.player_controller, 'angle') and not self.trigger_died:
-        #     print(((self.player_controller.angle / math.pi) * 180) % 180)
+        # #     print(((self.player_controller.angle / math.pi) * 180) % 180)
+        #
+        #     players = GameObject.find_by_type("PlayerCircle")
+        #
+        #     state = [players[0].min_dist, players[1].min_dist]
+        #     print(state)
 
         # ---------------
         # Changed for IA:
@@ -91,6 +99,7 @@ class MainSceneController(GameObject):
 
             # Get this frame action
             action = agent.act(state)
+            # print(action)
 
             # Get the state and reward of this frame
             next_state, reward, died = self.update_ai()
@@ -135,12 +144,15 @@ class MainSceneController(GameObject):
         :return:
         """
         # If Player already can control:
-        state = [(((self.player_controller.angle / math.pi) * 180) % 180)]
+        # angle = (((self.player_controller.angle / math.pi) * 180) % 180)
+        angle = (((self.player_controller.angle / math.pi) * 180) - 180)
 
-        rectangle_states = self.get_rectangle_state()
+        players = GameObject.find_by_type("PlayerCircle")
 
-        for rectangle_state in rectangle_states:
-            state += rectangle_state
+        state = [angle, players[0].min_dist, players[1].min_dist]
+
+        # for rectangle_state in rectangle_states:
+        #     state += rectangle_state
 
         # print(state)
         # print(self.score_controller.score)

@@ -6,8 +6,10 @@ from dqn_agent import DQNAgent
 class Trainer:
     __one_rectangle_state_size = 7
     __max_num_rec = 3
-    __action_size = len(["turn_right", "turn_left", "nothing"])
-    __state_size = 1 + __one_rectangle_state_size * __max_num_rec
+    # __action_size = len(["turn_right", "turn_left", "nothing"])
+    __action_size = len(["turn_right", "turn_left"])
+    # __state_size = 1 + __one_rectangle_state_size * __max_num_rec
+    __state_size = 3
     __agent = None
     __died = False
     __batch_size = 32
@@ -77,7 +79,7 @@ class Trainer:
         return cls.__return_history
 
     @classmethod
-    def train_dqn(cls, play, num_episodes=1000, render=True):
+    def train_dqn(cls, play, num_episodes=400, render=True):
 
         cls.__num_episodes = num_episodes
 
@@ -88,7 +90,7 @@ class Trainer:
         action_size = cls.get_action_size()
 
         # Creating the DQN agent
-        agent = DQNAgent(state_size, action_size, gamma=0.95, epsilon=0.5, epsilon_min=0.005, epsilon_decay=0.993, learning_rate=0.003)
+        agent = DQNAgent(state_size, action_size, gamma=0.95, epsilon=0.5, epsilon_min=0.01, epsilon_decay=0.985, learning_rate=0.001)
         cls.set_agent(agent)
 
         # checking if weights from previous learning session exists

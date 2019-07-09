@@ -48,6 +48,8 @@ class PlayerController(GameObject):
                     self.turn_right()
                 elif self.AI_playing_act == 1:
                     self.turn_left()
+                else:
+                    print('nothing')
         # ---------------
 
     def initial_animation(self):
