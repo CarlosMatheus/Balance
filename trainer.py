@@ -77,7 +77,7 @@ class Trainer:
         return cls.__return_history
 
     @classmethod
-    def train_dqn(cls, play, num_episodes=5000, render=True):
+    def train_dqn(cls, play, num_episodes=1000, render=True):
 
         cls.__num_episodes = num_episodes
 
@@ -88,7 +88,7 @@ class Trainer:
         action_size = cls.get_action_size()
 
         # Creating the DQN agent
-        agent = DQNAgent(state_size, action_size, gamma=0.95, epsilon=0.5, epsilon_min=0.01, epsilon_decay=0.999, learning_rate=0.001)
+        agent = DQNAgent(state_size, action_size, gamma=0.95, epsilon=0.3, epsilon_min=0.005, epsilon_decay=0.996, learning_rate=0.005)
         cls.set_agent(agent)
 
         # checking if weights from previous learning session exists

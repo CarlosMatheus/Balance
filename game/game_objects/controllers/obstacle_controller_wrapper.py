@@ -33,8 +33,9 @@ class ObstacleControllerWrapper(GameObject):
         self.last_increases_dificculty_time = Time.now()
         # ---------------
         # Changed for IA:
-        self.game_difficuty = int(random.random()*10+1)
-        print(self.game_difficuty)
+        # self.game_difficuty = int(random.random()*10+1)
+        self.game_difficuty = 1
+        # print(self.game_difficuty)
         # ---------------
         self.time_to_increase_difficult = 6.2
         self.generation_obstacle_difficult = 1

@@ -23,6 +23,9 @@ class MainSceneController(GameObject):
 
         # ---------------
         # Changed for IA:
+
+        sys.setrecursionlimit(20000)
+
         self.fade_out_duration = 0
         Time.time_scale = 1.0
 
@@ -163,8 +166,8 @@ class MainSceneController(GameObject):
                 rectangle_states.append(rectangle_state)
 
         del_list = []
-        for idx in range(len(rectangle_states)): # del rect that are before 240
-            if rectangle_states[idx][1] < 240:
+        for idx in range(len(rectangle_states)): # del rect that are before 200
+            if rectangle_states[idx][1] < 200:
                 del_list.append(idx)
 
         for idx in del_list:
@@ -172,8 +175,8 @@ class MainSceneController(GameObject):
                 del rectangle_states[idx]
 
         del_list = []
-        for idx in range(len(rectangle_states)):  # del rect that are after 630
-            if rectangle_states[idx][1] > 630:
+        for idx in range(len(rectangle_states)):  # del rect that are after 640
+            if rectangle_states[idx][1] > 640:
                 del_list.append(idx)
 
         for idx in del_list:
