@@ -1,15 +1,16 @@
 import os
 import matplotlib.pyplot as plt
 from dqn_agent import DQNAgent
+import time
 
 
 class Trainer:
     __one_rectangle_state_size = 7
-    __max_num_rec = 3
+    __max_num_rec = 2
     __action_size = len(["turn_right", "turn_left", "nothing"])
     # __action_size = len(["turn_right", "turn_left"])
-    # __state_size = 1 + __one_rectangle_state_size * __max_num_rec
-    __state_size = 3
+    __state_size = 3 + __one_rectangle_state_size * __max_num_rec
+    # __state_size = 3
     __agent = None
     __died = False
     __batch_size = 32
@@ -17,6 +18,7 @@ class Trainer:
     __episodes = 0
     __num_episodes = 300
     __return_history = []
+    __Time_history = []
 
     @classmethod
     def set_one_rectangle_state_size(cls, size):
@@ -79,7 +81,7 @@ class Trainer:
         return cls.__return_history
 
     @classmethod
-    def train_dqn(cls, play, num_episodes=400, render=True):
+    def train_dqn(cls, play, num_episodes=1200, render=True):
 
         cls.__num_episodes = num_episodes
 
@@ -89,8 +91,12 @@ class Trainer:
         state_size = cls.get_state_size()
         action_size = cls.get_action_size()
 
-        # Creating the DQN agent
-        agent = DQNAgent(state_size, action_size, gamma=0.95, epsilon=0.4, epsilon_min=0.01, epsilon_decay=0.98, learning_rate=0.001)
+        repetitions = 100
+
+        # for i in range(repetitions):
+            # Creating the DQN agent
+        epsilon = 0.45
+        agent = DQNAgent(state_size, action_size, gamma=0.95, epsilon=epsilon, epsilon_min=0.01, epsilon_decay=0.995, learning_rate=0.001)
         cls.set_agent(agent)
 
         # checking if weights from previous learning session exists
@@ -104,6 +110,7 @@ class Trainer:
 
         cls.__episodes = episodes = 1
 
+        # time.sleep(3)
         play()
 
         plt.pause(1.0)
@@ -118,7 +125,7 @@ class Trainer:
         plt.plot(return_history, 'b')
         plt.xlabel('Episode')
         plt.ylabel('Return')
-        plt.show(block=False)
+        # plt.show(block=False)
         plt.pause(0.1)
         plt.savefig('dqn_training.' + fig_format, fig_format=fig_format)
         # Saving the model to disk

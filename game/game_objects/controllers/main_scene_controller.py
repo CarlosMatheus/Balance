@@ -30,14 +30,14 @@ class MainSceneController(GameObject):
         Time.time_scale = 1.0
 
         self.trigger_died = False
-        self.max_rectangles = 3
+        self.max_rectangles = 2
         self.agent = Trainer.get_agent()
-        # self.state_size = 1 + self.max_rectangles * len([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-        self.state_size = 3
-        # self.initial_state = [0.0] + [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] * self.max_rectangles
-        self.initial_state = [0.0, 1000.0, 1000.0]
-        # self.state = np.reshape(self.initial_state, [1, self.state_size])
+        self.state_size = 3 + self.max_rectangles * len([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        # self.state_size = 3
+        self.initial_state = [0.0, -500, -500] + [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] * self.max_rectangles
+        # self.initial_state = [0.0, 1000.0, 1000.0]
         self.state = np.reshape(self.initial_state, [1, self.state_size])
+        # self.state = np.reshape(self.initial_state, [1, self.state_size])
         self.cumulative_reward = Trainer.get_cumulative_reward()
         self.died = False
         self.player_controller = None
@@ -145,14 +145,16 @@ class MainSceneController(GameObject):
         """
         # If Player already can control:
         # angle = (((self.player_controller.angle / math.pi) * 180) % 180)
-        angle = (((self.player_controller.angle / math.pi) * 180) - 180)
+        angle = (((self.player_controller.angle / math.pi) * 180))
 
         players = GameObject.find_by_type("PlayerCircle")
 
         state = [angle, players[0].min_dist, players[1].min_dist]
 
-        # for rectangle_state in rectangle_states:
-        #     state += rectangle_state
+        rectangle_states = self.get_rectangle_state()
+
+        for rectangle_state in rectangle_states:
+            state += rectangle_state
 
         # print(state)
         # print(self.score_controller.score)
@@ -263,8 +265,10 @@ class MainSceneController(GameObject):
                 Trainer.plot()
 
             Trainer.increase_episodes()
-            Scene.change_scene(0)
-            # Engine.end_game()
+            if Trainer.get_episodes() <= Trainer.get_num_episodes():
+                Scene.change_scene(0)
+            else:
+                Engine.end_game()
             # ---------------
 
     def game_over(self):

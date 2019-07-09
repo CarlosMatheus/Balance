@@ -99,14 +99,12 @@ class PlayerCircle(BasicCircle):
             # print("MIN_dist: " + str(min_dist))
 
     def f(self, x):
-        if x > 40:
+        if x > 30:
             return 1
-        if 30 < x < 40:
-            return -1
         if 20 < x < 30:
-            return -2
+            return -0.8
         if 10 < x < 20:
-            return -4
+            return -2
         if 5 < x < 10:
             return -5
         if x < 5:
