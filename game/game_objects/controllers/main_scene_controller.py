@@ -30,11 +30,12 @@ class MainSceneController(GameObject):
         Time.time_scale = 1.0
 
         self.trigger_died = False
-        self.max_rectangles = 4
+        self.max_rectangles = 3
         self.agent = Trainer.get_agent()
-        self.state_size = 1 + self.max_rectangles * len([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        self.empty_rectangle_state = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        self.state_size = 1 + self.max_rectangles * len(self.empty_rectangle_state)
         # self.state_size = 3
-        self.initial_state = [0.0] + [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] * self.max_rectangles
+        self.initial_state = [0.0] + self.empty_rectangle_state * self.max_rectangles
         # self.initial_state = [0.0, 1000.0, 1000.0]
         self.state = np.reshape(self.initial_state, [1, self.state_size])
         # self.state = np.reshape(self.initial_state, [1, self.state_size])
@@ -165,7 +166,6 @@ class MainSceneController(GameObject):
         rectangles = GameObject.find_by_type("Rectangle")
         max_rectangles = self.max_rectangles
         rectangle_states = []
-        empty_rectangle_state = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
         for rect in rectangles:
             if rect.polygon_mesh is not None:
@@ -176,24 +176,26 @@ class MainSceneController(GameObject):
                 point_list = rect.polygon_collider.get_point_list()
                 point_a = point_list[0]
                 point_b = point_list[1]
-                point_d = point_list[-1]
+                point_c = point_list[2]
+                point_d = point_list[3]
 
-                width = point_a.distance_to(point_d)
-                height = point_a.distance_to(point_b)
+                # width = point_a.distance_to(point_d)
+                # height = point_a.distance_to(point_b)
+                #
+                # # Get ang
+                # angle = point_a.angle_to(point_d)
 
-                # Get ang
-                angle = point_a.angle_to(point_d)
+                # if rect.physics is None: rect.physics = Physics(rect)
+                #
+                # linear_vel = rect.physics.get_inst_velocity()
 
-                if rect.physics is None: rect.physics = Physics(rect)
-
-                linear_vel = rect.physics.get_inst_velocity()
-
-                rectangle_state = [center[0]**3, center[1], height, width, angle, linear_vel.x, linear_vel.y]
+                # rectangle_state = [center[0]**3, center[1], height, width, angle, linear_vel.x, linear_vel.y]
+                rectangle_state = [point_a.x, point_a.y, point_b.x, point_b.y, point_c.x, point_c.y, point_d.x, point_d.y]
                 rectangle_states.append(rectangle_state)
 
         del_list = []
         for idx in range(len(rectangle_states)):  # del rect that are before 200
-            if rectangle_states[idx][1] < 100:
+            if rectangle_states[idx][1] < 200:
                 del_list.append(idx)
 
         for idx in del_list:
@@ -201,8 +203,8 @@ class MainSceneController(GameObject):
                 del rectangle_states[idx]
 
         del_list = []
-        for idx in range(len(rectangle_states)):  # del rect that are after 640
-            if rectangle_states[idx][1] > 690:
+        for idx in range(len(rectangle_states)):  # del rect that are after 650
+            if rectangle_states[idx][1] > 650:
                 del_list.append(idx)
 
         for idx in del_list:
@@ -219,7 +221,7 @@ class MainSceneController(GameObject):
             del rectangle_states[min_idx]
 
         while len(rectangle_states) < max_rectangles:
-            rectangle_states.append(empty_rectangle_state)
+            rectangle_states.append(self.empty_rectangle_state)
 
         return rectangle_states
 

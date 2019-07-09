@@ -4,8 +4,8 @@ from dqn_agent import DQNAgent
 
 
 class Trainer:
-    __one_rectangle_state_size = 7
-    __max_num_rec = 4
+    __one_rectangle_state_size = 8
+    __max_num_rec = 3
     __action_size = len(["turn_right", "turn_left", "nothing"])
     # __action_size = len(["turn_right", "turn_left"])
     __state_size = 1 + __one_rectangle_state_size * __max_num_rec
