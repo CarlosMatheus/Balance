@@ -198,7 +198,7 @@ class MainSceneController(GameObject):
         for rectangle_state in rectangle_states:
             state += rectangle_state
 
-        # print(state)
+        print(state)
         # print(self.score_controller.score)
         return state, self.score_controller.score - self.current_score + 1, self.died
 
