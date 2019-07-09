@@ -6,6 +6,7 @@ from game.game_objects.mesh_objects.particle import Particle
 from game.game_objects.mesh_objects.get_power_up_effect import GetPowerUpEffect
 from game.game_objects.mesh_objects.die_effect import DieEffect
 from pygame import mixer
+import math
 
 
 class PlayerCircle(BasicCircle):
@@ -15,6 +16,10 @@ class PlayerCircle(BasicCircle):
         self.circle_collider = CircleCollider(self)
         self.is_invencible = False
         self.is_not_dying = True
+        # ------------
+        # Changed for IA:
+        self.min_dist = 1000
+        # ------------
 
     def start(self):
         self.physics = Physics(self)
@@ -43,8 +48,58 @@ class PlayerCircle(BasicCircle):
     def direct_met(self):
         return Vector2(0, 1)
 
+    def check_distance_circle_to_rect(self):
+        rectangles = GameObject.find_by_type("Rectangle")
+        min_dist = 1000
+        for rect in rectangles:
+            points = rect.polygon_mesh.get_points()
+            point_a = points[0]
+            point_b = points[1]
+            point_c = points[2]
+            point_d = points[3]
+            dists = [
+                self.get_min_dist_from_line(point_a, point_b),
+                self.get_min_dist_from_line(point_b, point_c),
+                self.get_min_dist_from_line(point_c, point_d),
+                self.get_min_dist_from_line(point_d, point_a),
+            ]
+            min_dist_to_rect = min(dists)
+            if abs(min_dist_to_rect) < abs(min_dist):
+                min_dist = min_dist_to_rect
+            self.update_score_based_on_dists(min_dist_to_rect)
+        self.min_dist = min_dist
+
+    def get_min_dist_from_line(self, point_a, point_b):
+        point_c = point_b - point_a
+        min_dist = 1000
+        for i in range(11):
+            point_d = point_c * (i/10) + point_a
+            center_dist = self.transform.position.distance_to(point_d)
+            cur_dist = center_dist - self.radius
+            if self.transform.position.y > point_d.y:
+                cur_dist *= -1
+            if abs(cur_dist) < abs(min_dist):
+                min_dist = cur_dist
+        return min_dist
+
+    def update_score_based_on_dists(self, min_dist):
+        penalty = self.f(abs(min_dist))
+        if penalty < 0:
+            score_controller = GameObject.find_by_type("ScoreController")[0]
+            score_controller.score += penalty
+            # print(penalty)
+            # print("MIN_dist: " + str(min_dist))
+
+    def f(self, x):
+        if x > 0:
+            return 4 * math.log(x / 70)
+        else:
+            return -25
+
+
     def update(self):
         self.check_collision()
+        self.check_distance_circle_to_rect()
 
     def check_collision(self):
         (collided, game_obj) = self.circle_collider.on_collision()
