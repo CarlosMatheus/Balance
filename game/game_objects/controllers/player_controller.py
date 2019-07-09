@@ -38,6 +38,8 @@ class PlayerController(GameObject):
         # Changed for IA:
         self.initial_animation()
         if not self.in_initial_animation:
+            dist_1_ini = abs(self.game_object_list[0].check_distance_circle_to_rect())
+            dist_2_ini = abs(self.game_object_list[1].check_distance_circle_to_rect())
             if not self.AI_playing:
                 if Input.is_pressing_left:
                     self.turn_left()
@@ -50,7 +52,45 @@ class PlayerController(GameObject):
                     self.turn_left()
                 # else:
                     # print('nothing')
+            dist_1_final = abs(self.game_object_list[0].check_distance_circle_to_rect())
+            dist_2_final = abs(self.game_object_list[1].check_distance_circle_to_rect())
+            r1 = self.reward_based_on_move_away(dist_1_ini, dist_1_final)
+            r2 = self.reward_based_on_move_away(dist_2_ini, dist_2_final)
+            reward = r1 + r2
+            score_controller = GameObject.find_by_type("ScoreController")[0]
+            score_controller.score += reward
+            print(reward)
         # ---------------
+
+    def reward_based_on_move_away(self, dist_initial, dist_final):
+        r = self.f(dist_final)
+        if dist_final > dist_initial:
+            return -r
+        else:
+            return r
+
+    def f(self, x):
+        if x > 80:
+            return 0
+        if 70 < x < 80:
+            return -0.5
+        if 60 < x < 70:
+            return -1
+        if 50 < x < 60:
+            return -2
+        if 40 < x < 50:
+            return -3
+        if 30 < x < 40:
+            return -4
+        if 20 < x < 30:
+            return -5
+        if 10 < x < 20:
+            return -6
+        if 5 < x < 10:
+            return -7
+        if x < 5:
+            return -10
+        return 0
 
     def initial_animation(self):
         if self.in_initial_animation:

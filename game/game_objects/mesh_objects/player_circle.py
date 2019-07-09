@@ -73,6 +73,7 @@ class PlayerCircle(BasicCircle):
                 min_dist = min_dist_to_rect
             self.update_score_based_on_dists(min_dist_to_rect)
         self.min_dist = min_dist
+        return min_dist
 
     def get_min_dist_from_line(self, point_a, point_b):
         point_c = point_b - point_a

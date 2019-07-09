@@ -82,7 +82,7 @@ class MainSceneController(GameObject):
 
         # ---------------
         # Changed for IA:
-        self.ai()
+        # self.ai()
         # ---------------
 
     def ai(self):

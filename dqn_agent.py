@@ -61,7 +61,7 @@ class DQNAgent:
         model = models.Sequential()
 
         # 1 layer
-        num_neurons = 32
+        num_neurons = 512
         model.add(layers.Dense(
             units=num_neurons,
             activation=activations.relu,
@@ -74,15 +74,6 @@ class DQNAgent:
         model.add(layers.Dense(
             units=num_neurons,
             activation=activations.relu,
-        ),
-        )
-
-        # 3 layer
-        num_neurons = 32
-        model.add(layers.Dense(
-            units=num_neurons,
-            activation=activations.relu,
-            input_dim=self.state_size,
         ),
         )
 
