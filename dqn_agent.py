@@ -8,7 +8,18 @@ class DQNAgent:
     """
     Represents a Deep Q-Networks (DQN) agent.
     """
-    def __init__(self, state_size, action_size, gamma=0.95, epsilon=0.5, epsilon_min=0.01, epsilon_decay=0.98, learning_rate=0.001, buffer_size=4098):
+    def __init__(
+            self,
+            state_size,
+            action_size,
+            gamma=0.95,
+            epsilon=0.5,
+            epsilon_min=0.01,
+            epsilon_decay=0.98,
+            learning_rate=0.001,
+            learning_rate_decay=0.98,
+            buffer_size=4098,
+    ):
         """
         Creates a Deep Q-Networks (DQN) agent.
 
@@ -37,6 +48,7 @@ class DQNAgent:
         self.epsilon_min = epsilon_min
         self.epsilon_decay = epsilon_decay
         self.learning_rate = learning_rate
+        self.learning_rate_decay = learning_rate_decay
         self.model = self.make_model()
 
     def make_model(self):
@@ -49,7 +61,7 @@ class DQNAgent:
         model = models.Sequential()
 
         # 1 layer
-        num_neurons = 24
+        num_neurons = 32
         model.add(layers.Dense(
             units=num_neurons,
             activation=activations.relu,
@@ -58,7 +70,7 @@ class DQNAgent:
         )
 
         # 2 layer
-        num_neurons = 24
+        num_neurons = 64
         model.add(layers.Dense(
             units=num_neurons,
             activation=activations.relu,
@@ -66,6 +78,15 @@ class DQNAgent:
         )
 
         # 3 layer
+        num_neurons = 32
+        model.add(layers.Dense(
+            units=num_neurons,
+            activation=activations.relu,
+            input_dim=self.state_size,
+        ),
+        )
+
+        # 4 layer
         num_neurons = self.action_size
         model.add(layers.Dense(
             units=num_neurons,
@@ -73,7 +94,7 @@ class DQNAgent:
         ),
         )
 
-        model.build(input_shape=(1, 2))
+        model.build(input_shape=(1, self.state_size))
         model.summary()
 
         model.compile(
@@ -94,7 +115,7 @@ class DQNAgent:
         """
 
         actions = self.model.predict(state)[0]
-
+        print(actions)
         if np.random.binomial(1, self.epsilon) == 1:
             action = np.random.choice([a for a in range(len(actions))])
         else:
@@ -162,10 +183,11 @@ class DQNAgent:
         """
         self.model.save_weights(name)
 
-    def update_epsilon(self):
+    def update_epsilon_and_learning_rate(self):
         """
         Updates the epsilon used for epsilon-greedy action selection.
         """
         self.epsilon *= self.epsilon_decay
         if self.epsilon < self.epsilon_min:
             self.epsilon = self.epsilon_min
+        self.learning_rate *= self.learning_rate_decay

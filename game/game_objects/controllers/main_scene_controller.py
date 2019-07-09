@@ -30,11 +30,11 @@ class MainSceneController(GameObject):
         Time.time_scale = 1.0
 
         self.trigger_died = False
-        self.max_rectangles = 2
+        self.max_rectangles = 4
         self.agent = Trainer.get_agent()
-        self.state_size = 3 + self.max_rectangles * len([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        self.state_size = 1 + self.max_rectangles * len([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
         # self.state_size = 3
-        self.initial_state = [0.0, -500, -500] + [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] * self.max_rectangles
+        self.initial_state = [0.0] + [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] * self.max_rectangles
         # self.initial_state = [0.0, 1000.0, 1000.0]
         self.state = np.reshape(self.initial_state, [1, self.state_size])
         # self.state = np.reshape(self.initial_state, [1, self.state_size])
@@ -130,8 +130,8 @@ class MainSceneController(GameObject):
                 episodes = Trainer.get_episodes()
                 NUM_EPISODES = Trainer.get_num_episodes()
                 time = Time.now() - self.initial_time
-                print("episode: {}/{}, time: {}, score: {:.6}, epsilon: {:.3}"
-                      .format(episodes, NUM_EPISODES, time, cumulative_reward, agent.epsilon))
+                print("episode: {}/{}, time: {}, score: {:.6}, epsilon: {:.3}, learning rate: {:.3}"
+                      .format(episodes, NUM_EPISODES, time, cumulative_reward, agent.epsilon, agent.learning_rate))
 
             batch_size = Trainer.get_batch_size()
             if len(agent.replay_buffer) > 2 * batch_size:
@@ -144,19 +144,20 @@ class MainSceneController(GameObject):
         :return:
         """
         # If Player already can control:
-        # angle = (((self.player_controller.angle / math.pi) * 180) % 180)
-        angle = (((self.player_controller.angle / math.pi) * 180))
+        angle = (((self.player_controller.angle / math.pi) * 180) % 180)
+        # angle = (((self.player_controller.angle / math.pi) * 180))
 
-        players = GameObject.find_by_type("PlayerCircle")
+        # players = GameObject.find_by_type("PlayerCircle")
 
-        state = [angle, players[0].min_dist, players[1].min_dist]
+        # state = [angle, players[0].min_dist, players[1].min_dist]
+        state = [angle]
 
         rectangle_states = self.get_rectangle_state()
 
         for rectangle_state in rectangle_states:
             state += rectangle_state
 
-        # print(state)
+        print(state)
         # print(self.score_controller.score)
         return state, self.score_controller.score - self.current_score + 1, self.died
 
@@ -187,12 +188,12 @@ class MainSceneController(GameObject):
 
                 linear_vel = rect.physics.get_inst_velocity()
 
-                rectangle_state = [center[0], center[1], height, width, angle, linear_vel.x, linear_vel.y]
+                rectangle_state = [center[0]**3, center[1], height, width, angle, linear_vel.x, linear_vel.y]
                 rectangle_states.append(rectangle_state)
 
         del_list = []
         for idx in range(len(rectangle_states)):  # del rect that are before 200
-            if rectangle_states[idx][1] < 200:
+            if rectangle_states[idx][1] < 100:
                 del_list.append(idx)
 
         for idx in del_list:
@@ -201,7 +202,7 @@ class MainSceneController(GameObject):
 
         del_list = []
         for idx in range(len(rectangle_states)):  # del rect that are after 640
-            if rectangle_states[idx][1] > 640:
+            if rectangle_states[idx][1] > 690:
                 del_list.append(idx)
 
         for idx in del_list:
@@ -259,7 +260,7 @@ class MainSceneController(GameObject):
 
             agent = Trainer.get_agent()
             episodes = Trainer.get_episodes()
-            agent.update_epsilon()
+            agent.update_epsilon_and_learning_rate()
 
             if episodes % 10 == 0:
                 Trainer.plot()

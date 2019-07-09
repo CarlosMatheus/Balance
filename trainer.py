@@ -1,15 +1,14 @@
 import os
 import matplotlib.pyplot as plt
 from dqn_agent import DQNAgent
-import time
 
 
 class Trainer:
     __one_rectangle_state_size = 7
-    __max_num_rec = 2
+    __max_num_rec = 4
     __action_size = len(["turn_right", "turn_left", "nothing"])
     # __action_size = len(["turn_right", "turn_left"])
-    __state_size = 3 + __one_rectangle_state_size * __max_num_rec
+    __state_size = 1 + __one_rectangle_state_size * __max_num_rec
     # __state_size = 3
     __agent = None
     __died = False
@@ -81,7 +80,7 @@ class Trainer:
         return cls.__return_history
 
     @classmethod
-    def train_dqn(cls, play, num_episodes=1200, render=True):
+    def train_dqn(cls, play, num_episodes=500, render=True):
 
         cls.__num_episodes = num_episodes
 
@@ -91,12 +90,17 @@ class Trainer:
         state_size = cls.get_state_size()
         action_size = cls.get_action_size()
 
-        repetitions = 100
+        agent = DQNAgent(
+            state_size,
+            action_size,
+            gamma=0.95,
+            epsilon=0.5,
+            epsilon_min=0.01,
+            epsilon_decay=0.992,
+            learning_rate=0.4,
+            learning_rate_decay=0.98,
+        )
 
-        # for i in range(repetitions):
-            # Creating the DQN agent
-        epsilon = 0.45
-        agent = DQNAgent(state_size, action_size, gamma=0.95, epsilon=epsilon, epsilon_min=0.01, epsilon_decay=0.995, learning_rate=0.001)
         cls.set_agent(agent)
 
         # checking if weights from previous learning session exists
@@ -108,9 +112,9 @@ class Trainer:
 
         cls.set_died(False)
 
-        cls.__episodes = episodes = 1
+        cls.__episodes = 1
 
-        # time.sleep(3)
+        # Start playing the game:
         play()
 
         plt.pause(1.0)
