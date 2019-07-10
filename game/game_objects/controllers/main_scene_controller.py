@@ -21,13 +21,13 @@ class MainSceneController(GameObject):
         self.setup_initializer()
         self.setup_fader()
         self.current_score = 0.0
+        self.fade_out_duration = 0
 
         if Constants.is_training_ai or Constants.evaluating_ai:
             # ---------------
             # Changed for IA:
             sys.setrecursionlimit(20000)
             self.last_action = 0
-            self.fade_out_duration = 0
             Time.time_scale = 1.0
             self.trigger_died = False
             self.max_rectangles = 1
