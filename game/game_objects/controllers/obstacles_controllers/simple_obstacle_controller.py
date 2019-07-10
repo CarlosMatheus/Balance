@@ -27,7 +27,7 @@ class SimpleObstacleController(GameObject):
                                               + self.fall_velocity * Time.delta_time())
 
     def generate_obstacle(self):
-        direction = rand(0, 1) < 0.5
+        direction = 1
         rect = Rectangle(Vector2(direction * 0.5 * Constants.screen_width + 12, - 0.06 * Constants.screen_height),
                          Vector2(0.45 * Constants.screen_width,0.06 * Constants.screen_height),
                          Material((255, 255, 255)))

@@ -1,12 +1,13 @@
 import os
 import matplotlib.pyplot as plt
 from dqn_agent import DQNAgent
+from game.scripts.constants import Constants
 
 
 class Trainer:
-    __one_rectangle_state_size = 8
-    __max_num_rec = 3
-    __action_size = len(["turn_right", "turn_left", "nothing"])
+    __one_rectangle_state_size = 1
+    __max_num_rec = 1
+    __action_size = len(["turn_right", "turn_left"])
     # __action_size = len(["turn_right", "turn_left"])
     __state_size = 1 + __one_rectangle_state_size * __max_num_rec
     # __state_size = 3
@@ -80,7 +81,7 @@ class Trainer:
         return cls.__return_history
 
     @classmethod
-    def train_dqn(cls, play, num_episodes=500, render=True):
+    def train_dqn(cls, play, num_episodes=500, epsilon=0.5, epsilon_decay=0.98, learning_rate=0.001, learning_rate_decay=0.99):
 
         cls.__num_episodes = num_episodes
 
@@ -94,11 +95,11 @@ class Trainer:
             state_size,
             action_size,
             gamma=0.95,
-            epsilon=0.5,
+            epsilon=epsilon,
             epsilon_min=0.01,
-            epsilon_decay=0.992,
-            learning_rate=0.4,
-            learning_rate_decay=0.98,
+            epsilon_decay=epsilon_decay,
+            learning_rate=learning_rate,
+            learning_rate_decay=learning_rate_decay,
         )
 
         cls.set_agent(agent)
@@ -132,5 +133,7 @@ class Trainer:
         # plt.show(block=False)
         plt.pause(0.1)
         plt.savefig('dqn_training.' + fig_format, fig_format=fig_format)
-        # Saving the model to disk
-        agent.save('balance.h5')
+
+        if Constants.is_training_ai:
+            # Saving the model to disk
+            agent.save('balance.h5')

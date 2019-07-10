@@ -8,6 +8,7 @@ from game.game_objects.controllers.items_controller_wrapper import ItemsControll
 from game.game_objects.controllers.pause_controller import PauseController
 import numpy as np
 from trainer import Trainer
+from game.scripts.constants import Constants
 import math
 
 
@@ -21,28 +22,28 @@ class MainSceneController(GameObject):
         self.setup_fader()
         self.current_score = 0.0
 
-        # ---------------
-        # Changed for IA:
-
-        sys.setrecursionlimit(20000)
-
-        self.fade_out_duration = 0
-        Time.time_scale = 1.0
-
-        self.trigger_died = False
-        self.max_rectangles = 3
-        self.agent = Trainer.get_agent()
-        self.empty_rectangle_state = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-        self.state_size = 1 + self.max_rectangles * len(self.empty_rectangle_state)
-        # self.state_size = 3
-        self.initial_state = [0.0] + self.empty_rectangle_state * self.max_rectangles
-        # self.initial_state = [0.0, 1000.0, 1000.0]
-        self.state = np.reshape(self.initial_state, [1, self.state_size])
-        # self.state = np.reshape(self.initial_state, [1, self.state_size])
-        self.cumulative_reward = Trainer.get_cumulative_reward()
-        self.died = False
-        self.player_controller = None
-        # ---------------
+        if Constants.is_training_ai or Constants.evaluating_ai:
+            # ---------------
+            # Changed for IA:
+            sys.setrecursionlimit(20000)
+            self.last_action = 0
+            self.fade_out_duration = 0
+            Time.time_scale = 1.0
+            self.trigger_died = False
+            self.max_rectangles = 1
+            self.agent = Trainer.get_agent()
+            self.empty_rectangle_state = [0.0]
+            self.state_size = 1 + self.max_rectangles * len(self.empty_rectangle_state)
+            # self.state_size = 3
+            self.initial_state = [0.0] + self.empty_rectangle_state * self.max_rectangles
+            # self.initial_state = [0.0, 1000.0, 1000.0]
+            self.last_state = np.reshape(self.initial_state, [1, self.state_size])
+            # self.state = np.reshape(self.initial_state, [1, self.state_size])
+            self.cumulative_reward = Trainer.get_cumulative_reward()
+            self.died = False
+            self.player_controller = None
+            self.last_score = 0
+            # ---------------
 
     def setup_initializer(self):
         self.initial_time = Time.now()
@@ -72,17 +73,10 @@ class MainSceneController(GameObject):
         self.initialize_scene()
         self.change_scene()
 
-        # if self.player_controller and hasattr(self.player_controller, 'angle') and not self.trigger_died:
-        # #     print(((self.player_controller.angle / math.pi) * 180) % 180)
-        #
-        #     players = GameObject.find_by_type("PlayerCircle")
-        #
-        #     state = [players[0].min_dist, players[1].min_dist]
-        #     print(state)
-
         # ---------------
         # Changed for IA:
-        # self.ai()
+        if Constants.is_training_ai or Constants.evaluating_ai:
+            self.ai()
         # ---------------
 
     def ai(self):
@@ -92,51 +86,57 @@ class MainSceneController(GameObject):
         """
         agent = Trainer.get_agent()
         state_size = self.state_size
-        state = self.state
         cumulative_reward = Trainer.get_cumulative_reward()
 
         # If the game really started (passed the initial animation)
         if self.player_controller and hasattr(self.player_controller, 'angle') and not self.trigger_died:
 
+            # Get the state and reward of this frame
+            state, last_reward, died = self.update_ai()
+
+            # Reshape the state to pass on Keras:
+            state = np.reshape(state, [1, state_size])
+
             # Get this frame action
             action = agent.act(state)
             # print(action)
 
-            # Get the state and reward of this frame
-            next_state, reward, died = self.update_ai()
-
-            # Reshape the state to pass on Keras:
-            next_state = np.reshape(next_state, [1, state_size])
-
             # Make AI play actual action
             self.player_controller.set_IA_as_player(action)
 
-            # Appending this experience to the experience replay buffer
-            agent.append_experience(state, action, reward, next_state, died)
-            # print(reward)
-
-            # Update state for next frame
-            self.state = next_state
+            if Constants.is_training_ai:
+                # Appending this experience to the experience replay buffer
+                agent.append_experience(self.last_state, self.last_action, last_reward, state, died)
+                # print(reward)
 
             # Make cumulative reward
-            cumulative_reward = agent.gamma * cumulative_reward + reward
+            cumulative_reward = agent.gamma * cumulative_reward + last_reward
             Trainer.set_cumulative_reward(cumulative_reward)
             # print(cumulative_reward)
 
+            # Update state for next frame
+            self.last_state = state
+            self.last_action = action
+
             # Adjust score
-            self.current_score = self.score_controller.score
+            self.last_score = self.score_controller.score
 
             if died:
                 self.trigger_died = True
                 episodes = Trainer.get_episodes()
                 NUM_EPISODES = Trainer.get_num_episodes()
                 time = Time.now() - self.initial_time
-                print("episode: {}/{}, time: {}, score: {:.6}, epsilon: {:.3}, learning rate: {:.3}"
-                      .format(episodes, NUM_EPISODES, time, cumulative_reward, agent.epsilon, agent.learning_rate))
+                if Constants.is_training_ai:
+                    print("episode: {}/{}, time: {}, score: {:.6}, epsilon: {:.3}, learning rate: {:.3}"
+                          .format(episodes, NUM_EPISODES, time, cumulative_reward, agent.epsilon, agent.learning_rate))
+                else:
+                    print("episode: {}/{}, time: {}, score: {:.6}"
+                          .format(episodes, NUM_EPISODES, time, cumulative_reward))
 
-            batch_size = Trainer.get_batch_size()
-            if len(agent.replay_buffer) > 2 * batch_size:
-                loss = agent.replay(batch_size)
+            if Constants.is_training_ai:
+                batch_size = Trainer.get_batch_size()
+                if len(agent.replay_buffer) > 2 * batch_size:
+                    loss = agent.replay(batch_size)
 
 
     def update_ai(self):
@@ -144,13 +144,8 @@ class MainSceneController(GameObject):
         Will update and pass the information to AI
         :return:
         """
-        # If Player already can control:
         angle = (((self.player_controller.angle / math.pi) * 180) % 180)
-        # angle = (((self.player_controller.angle / math.pi) * 180))
 
-        # players = GameObject.find_by_type("PlayerCircle")
-
-        # state = [angle, players[0].min_dist, players[1].min_dist]
         state = [angle]
 
         rectangle_states = self.get_rectangle_state()
@@ -158,9 +153,7 @@ class MainSceneController(GameObject):
         for rectangle_state in rectangle_states:
             state += rectangle_state
 
-        print(state)
-        # print(self.score_controller.score)
-        return state, self.score_controller.score - self.current_score + 1, self.died
+        return state, self.score_controller.score - self.last_score + 1, self.died
 
     def get_rectangle_state(self):
         rectangles = GameObject.find_by_type("Rectangle")
@@ -169,54 +162,16 @@ class MainSceneController(GameObject):
 
         for rect in rectangles:
             if rect.polygon_mesh is not None:
-                # Get center:
                 center = rect.transform.position
-
-                # Get height, width
-                point_list = rect.polygon_collider.get_point_list()
-                point_a = point_list[0]
-                point_b = point_list[1]
-                point_c = point_list[2]
-                point_d = point_list[3]
-
-                # width = point_a.distance_to(point_d)
-                # height = point_a.distance_to(point_b)
-                #
-                # # Get ang
-                # angle = point_a.angle_to(point_d)
-
-                # if rect.physics is None: rect.physics = Physics(rect)
-                #
-                # linear_vel = rect.physics.get_inst_velocity()
-
-                # rectangle_state = [center[0]**3, center[1], height, width, angle, linear_vel.x, linear_vel.y]
-                rectangle_state = [point_a.x, point_a.y, point_b.x, point_b.y, point_c.x, point_c.y, point_d.x, point_d.y]
+                rectangle_state = [center.y]
                 rectangle_states.append(rectangle_state)
-
-        del_list = []
-        for idx in range(len(rectangle_states)):  # del rect that are before 200
-            if rectangle_states[idx][1] < 200:
-                del_list.append(idx)
-
-        for idx in del_list:
-            if idx < len(rectangle_states):
-                del rectangle_states[idx]
-
-        del_list = []
-        for idx in range(len(rectangle_states)):  # del rect that are after 650
-            if rectangle_states[idx][1] > 650:
-                del_list.append(idx)
-
-        for idx in del_list:
-            if idx < len(rectangle_states):
-                del rectangle_states[idx]
 
         while len(rectangle_states) > max_rectangles:
             min_idx = 0
             min_val = 1000
             for i in range(len(rectangle_states)):
-                if rectangle_states[i][1] < min_val:
-                    min_val = rectangle_states[i][1]
+                if rectangle_states[i][0] < min_val:
+                    min_val = rectangle_states[i][0]
                     min_idx = i
             del rectangle_states[min_idx]
 
@@ -252,27 +207,32 @@ class MainSceneController(GameObject):
             Time.time_scale = 0
         if self.should_change_scene and Time.now() - self.change_scene_timer > self.fade_out_duration+0.2:
             Time.time_scale = 1.0
-            # ---------------
-            # Changed for IA:
+            if Constants.is_training_ai or Constants.evaluating_ai:
+                # ---------------
+                # Changed for IA:
 
-            cumulative_reward = Trainer.get_cumulative_reward()
-            return_history = Trainer.get_return_history()
+                cumulative_reward = Trainer.get_cumulative_reward()
+                return_history = Trainer.get_return_history()
 
-            return_history.append(cumulative_reward)
+                return_history.append(cumulative_reward)
 
-            agent = Trainer.get_agent()
-            episodes = Trainer.get_episodes()
-            agent.update_epsilon_and_learning_rate()
+                agent = Trainer.get_agent()
+                episodes = Trainer.get_episodes()
 
-            if episodes % 10 == 0:
-                Trainer.plot()
+                if Constants.is_training_ai:
+                    agent.update_epsilon_and_learning_rate()
 
-            Trainer.increase_episodes()
-            if Trainer.get_episodes() <= Trainer.get_num_episodes():
-                Scene.change_scene(0)
-            else:
-                Engine.end_game()
-            # ---------------
+                if episodes % 10 == 0:
+                    Trainer.plot()
+
+                Trainer.increase_episodes()
+
+                if Trainer.get_episodes() <= Trainer.get_num_episodes():
+                    Scene.change_scene(0)
+                else:
+                    Engine.end_game()
+                # ---------------
+            Scene.change_scene(0)
 
     def game_over(self):
         """

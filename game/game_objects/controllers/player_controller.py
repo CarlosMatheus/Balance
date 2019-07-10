@@ -58,8 +58,8 @@ class PlayerController(GameObject):
             r2 = self.reward_based_on_move_away(dist_2_ini, dist_2_final)
             reward = r1 + r2
             score_controller = GameObject.find_by_type("ScoreController")[0]
-            score_controller.score += reward
-            print(reward)
+            # score_controller.score += reward
+            # print(reward)
         # ---------------
 
     def reward_based_on_move_away(self, dist_initial, dist_final):

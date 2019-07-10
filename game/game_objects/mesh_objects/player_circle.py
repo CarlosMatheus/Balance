@@ -95,7 +95,7 @@ class PlayerCircle(BasicCircle):
         if penalty < 0:
             # print(penalty)
             score_controller = GameObject.find_by_type("ScoreController")[0]
-            score_controller.score += penalty
+            # score_controller.score += penalty
             # print(penalty)
             # print("MIN_dist: " + str(min_dist))
 

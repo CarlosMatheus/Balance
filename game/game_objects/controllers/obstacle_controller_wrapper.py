@@ -63,7 +63,10 @@ class ObstacleControllerWrapper(GameObject):
             game_objs = obstacle_generator.game_object_list
             self.game_object_list.extend(game_objs)
 
+        self.game_difficuty = 1
+
     def increase_difficult(self):
+        return
         if Time.now() - self.last_increases_dificculty_time > self.time_to_increase_difficult \
                 and self.game_difficuty < self.max_difficult:
 

@@ -61,7 +61,7 @@ class DQNAgent:
         model = models.Sequential()
 
         # 1 layer
-        num_neurons = 512
+        num_neurons = 6
         model.add(layers.Dense(
             units=num_neurons,
             activation=activations.relu,
@@ -70,7 +70,7 @@ class DQNAgent:
         )
 
         # 2 layer
-        num_neurons = 64
+        num_neurons = 6
         model.add(layers.Dense(
             units=num_neurons,
             activation=activations.relu,
@@ -106,7 +106,6 @@ class DQNAgent:
         """
 
         actions = self.model.predict(state)[0]
-        print(actions)
         if np.random.binomial(1, self.epsilon) == 1:
             action = np.random.choice([a for a in range(len(actions))])
         else:
@@ -145,7 +144,10 @@ class DQNAgent:
         for state, action, reward, next_state, done in minibatch:
             target = self.model.predict(state)
             if not done:
-                target[0][action] = reward + self.gamma * np.max(self.model.predict(next_state)[0])
+                try:
+                    target[0][action] = reward + self.gamma * np.max(self.model.predict(next_state)[0])
+                except:
+                    print(1)
             else:
                 target[0][action] = reward
             # Filtering out states and targets for training

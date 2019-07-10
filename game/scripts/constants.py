@@ -5,3 +5,5 @@ class Constants:
     circCenter_y = 520
     circRadius = 95
     current_score = 0
+    is_training_ai = False
+    evaluating_ai = False
