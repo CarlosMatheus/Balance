@@ -1,9 +1,7 @@
 # Balance
 
 ![game](https://media.giphy.com/media/xB2Y7NHFE8C2Ip9EHD/giphy.gif)
-![game](https://media.giphy.com/media/1wQe46Tf4SzcMMIk1d/giphy.gif)
 ![game](https://media.giphy.com/media/cdyniVu3x1ydtoq99k/giphy.gif)
-![game](https://media.giphy.com/media/5q2abHG5yN2UKyFOzz/giphy.gif)
 
 Balance is a simple and challenging arcade game made using [Pygin](https://github.com/CarlosMatheus/Pygin).  
 
@@ -58,7 +56,7 @@ Balance and Pygin were born together in this repository, but then the engine gre
 
 ## License
 
-This project is licensed under the MIT License - see the [licence](LICENCE.md) file for details.
+This project is licensed under the MIT License - see the [licence](LICENSE.md) file for details.
 
 ## Acknowledgments
 
