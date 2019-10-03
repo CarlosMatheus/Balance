@@ -41,11 +41,11 @@ If any substantial change is made, please, help out with the documentation using
 
 ## About
 
-The objective of Balance is to get the most amount of points as possible. A hard task to the game is getting to score equal to 1000 and it should be the main goal of the game.
+The objective of Balance is to get the most amount of points as possible. A hard task to the game is getting a score equal to 1000, and that should be the main goal of the game.
 This game is an example of the capabilities of the game structure.
 
-This project aims to create a game engine to make easier the precess of game development using Pygame. 
-One of the initial purposes of this game was to develop a simple engine for making easier the use of Pygame to build more complex games. Therefore, the main frame of the game was built flexible and could be adapted to multiple types of games.
+This project aims to create a game engine to make the precess of game development easier using Pygame. 
+One of the initial purposes of this game was to develop a simple engine to simplify the use of Pygame to build more complex games. Therefore, the main frame of the game was built to be flexible and could be adapted to multiple types of games.
 Balance and Pygin were born together in this repository, but then the engine grew and migrated to its own [repository](https://github.com/CarlosMatheus/Pygin).
 
 ## Authors
@@ -56,7 +56,7 @@ Balance and Pygin were born together in this repository, but then the engine gre
 
 ## License
 
-This project is licensed under the MIT License - see the [licence](LICENSE.md) file for details.
+This project is licensed under the MIT License - see the [license](LICENSE.md) file for details.
 
 ## Acknowledgments
 
