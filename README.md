@@ -1,7 +1,6 @@
 # Balance
 
-![game](https://media.giphy.com/media/xB2Y7NHFE8C2Ip9EHD/giphy.gif)
-![game](https://media.giphy.com/media/cdyniVu3x1ydtoq99k/giphy.gif)
+<img src="https://media.giphy.com/media/xB2Y7NHFE8C2Ip9EHD/giphy.gif" width="430">  <img src="https://media.giphy.com/media/cdyniVu3x1ydtoq99k/giphy.gif" width="430">
 
 Balance is a simple and challenging arcade game made using [Pygin](https://github.com/CarlosMatheus/Pygin).  
 
