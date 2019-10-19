@@ -2,28 +2,28 @@
 
 <img src="https://media.giphy.com/media/xB2Y7NHFE8C2Ip9EHD/giphy.gif" width="430">  <img src="https://media.giphy.com/media/cdyniVu3x1ydtoq99k/giphy.gif" width="430">
 
-Balance is a simple and challenging arcade game made using [Pygin](https://github.com/CarlosMatheus/Pygin).  
+Balance is a simple and challenging arcade game made using [pygin](https://github.com/CarlosMatheus/Pygin).  
+
+## Playing the game
+
+If you are using Windows and simply wants to play the game, download and play its binary on its [itch.io page](https://carlos-matheus.itch.io/balance).
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine if you use Linux. 
-Instructions for Windows and Mac are similar.
+These instructions will get you a copy of the project up and running on your local machine. This works for Linux, Windows and Mac.
 
 ### Prerequisites
 
-You will just have to install Pygame. The instructions below will show you how to do this for Linux (Ubuntu 16.04).
+Make sure you have python3 and pip3 installed.
 
-First, install Python3 setup tools and pip:
+### Setup
 
-```
-$ sudo apt-get install python3-setuptools
-$ sudo easy_install3 pip
-```
+Clone the repository.
 
-Then install Pygame using pip:
+Install the pygin package using pip:
 
 ```
-$ sudo pip3.5 install pygame
+pip3 install pygin
 ```
 
 ### Playing the game
@@ -40,26 +40,14 @@ If any substantial change is made, please, help out with the documentation using
 
 ## About
 
-The objective of Balance is to get the most amount of points as possible. A hard task to the game is getting a score equal to 1000, and that should be the main goal of the game.
-This game is an example of the capabilities of the game structure.
+The objective of Balance is to get the most amount of points as possible. A hard task to the game is getting a score equal to 1000, and that should be the main goal of the game. This game is an example of the capabilities of the pygin game engine.
 
-This project aims to create a game engine to make the precess of game development easier using Pygame. 
 One of the initial purposes of this game was to develop a simple engine to simplify the use of Pygame to build more complex games. Therefore, the main frame of the game was built to be flexible and could be adapted to multiple types of games.
 Balance and Pygin were born together in this repository, but then the engine grew and migrated to its own [repository](https://github.com/CarlosMatheus/Pygin).
-
-## Authors
-
-* **Carlos Matheus Barros da Silva (Shark)** - [CarlosMatheus](https://github.com/CarlosMatheus)
-* **Eric Pereira Queiroz Moreira (Precioso)** - [ericpqmor](https://github.com/ericpqmor)
-* **Igor Mourão Ribeiro (Dono)** - [igor-ribeiiro](https://github.com/igor-ribeiiro)
 
 ## License
 
 This project is licensed under the MIT License - see the [license](LICENSE.md) file for details.
-
-## Acknowledgments
-
-* **Professor Edgar Toshiro Yano** - [Curriculum](http://buscatextual.cnpq.br/buscatextual/visualizacv.do?id=K4798593T1&idiomaExibicao=2)
 
 
 
